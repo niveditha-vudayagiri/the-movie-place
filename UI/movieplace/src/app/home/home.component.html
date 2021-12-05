@@ -1,0 +1,43 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Here is the movie cards UI-->
+
+<div class="itms itemcont">
+  <div class="container">
+  <div class="row col-md-8 col-sm-8 col-xl-6 mx-auto">
+    <div class="input-group rounded main-search mx-auto my-3">
+      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+      aria-describedby="search-addon" />
+      <span class="input-group-text border-0" id="search-addon">
+        <i class="fas fa-search"></i>
+      </span>
+    </div> 
+    </div>
+  </div>
+  <div class="row py-5 px-5">
+  <div *ngFor="let movie of movies" class=" col-md-6 col-xs-12 col-sm-16 col-lg-4" [routerLink]="['/movieDetails',movie.id]" routerLinkActive="active">
+    <div class="movie-card" style="background-image: url({{movie.imageUrl}}); box-shadow: -15px -10px 150px -35px rgba(255,0,0.7);">
+      <div class="movie-card__overlay"></div>
+      <div class="movie-card__share">
+        <button class="movie-card__icon">
+          <i class="fa fa-heart"></i>
+        </button>
+        <button class="movie-card__icon">
+          <i class="fa fa-tv"></i>
+        </button>
+      </div>
+      <div class="movie-card__content">
+        <div class="movie-card__header">
+          <h1 class="movie-card__title">{{movie?.name}}</h1>
+          <h4 class="movie-card__info">({{movie.releaseYear}})</h4>
+        </div>
+        <p class="movie-card__desc">{{movie.description}}</p>
+      </div>
+      <div class="blur_back"></div>
+    </div>
+  </div>
+  </div>
+</div>

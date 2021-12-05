@@ -1,0 +1,159 @@
+<div id="main-container" class="container-fluid " style="padding:0;">
+    <div class="row page-row">
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-0 col-xs-0 sidebar bg-dark">
+            <ul class="nav nav-sidebar flex-column  text-white  mx-0">
+                <li class="nav-item active">
+                    <a href="#" class="nav-link text-white" aria-current="page">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                    Actor
+                    </a>
+                </li>
+                    
+                <li>
+                    <a href="#" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+                    Movie
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+                    Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+                    Products
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+                    Customers
+                    </a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+        <div class="main col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+            <div class="row inner-first-row" >
+                <button type="button" data-toggle="modal" data-target="#addActorModal" class="btn btn-dark ">Add Actor</button>
+            </div>
+            <div class="row">
+                <div *ngFor="let actor of actors" class="card-row col-xl-4 col-md-6 col-sm-6 col-xs-8">
+                    <div class="card m-b-30">
+                        <div class="card-body row">
+                            <div class="col-6 card-image">
+                                <a [routerLink]="['/actor',actor.id]"><img src="{{actor?.imageUrl}}" alt="" class="img img-fluid rounded-circle"></a>
+                            </div>
+                            <div class="col-6 card-title align-self-center mb-0">
+                                <h5><a [routerLink]="['/actor',actor.id]">{{actor?.name}}</a></h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="float-right btn-group btn-group-sm">
+                                <a class="btn btn-primary tooltips" data-placement="top" (click)="onOpenModal(actor,'edit')" data-original-title="Edit" ><i class="fa fa-pencil"></i> </a>
+                                <a class="btn btn-secondary tooltips" data-placement="top" (click)="onOpenModal(actor,'delete')" data-original-title="Delete" ><i class="fa fa-times"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+
+<!-- Add Actor Modal -->
+<div class="modal fade" id="addActorModal" tabindex="-1" role="dialog" aria-labelledby="addActorModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addActorModalLabel">Add Actor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addActorForm="ngForm" (ngSubmit)="onAddActor(addActorForm)">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" Required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Age</label>
+              <input type="text" ngModel name="age" class="form-control" id="age" placeholder="Age" Required>
+            </div>
+            <div class="form-group">
+              <label for="imageUrl">Image URL</label>
+              <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
+            </div>
+            <div class="modal-footer">
+              <button [disabled]="addActorForm.invalid" id="add-actor-form" type="submit" class="btn btn-primary">Confirm</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+<!-- Edit Actor Modal-->
+<div class="modal fade" id="editActorModal" tabindex="-1" role="dialog" aria-labelledby="editActorModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editActorModalLabel">Edit Actor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editActorForm="ngForm">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" name="name" ngModel="{{editActor?.name}}" class="form-control" id="name" placeholder="Name" Required>
+            </div>
+            <input type="hidden" ngModel="{{editActor?.id}}" name="id" placeholder="id" id="id" class="form-control">
+            
+            <div class="form-group">
+              <label for="age">Age</label>
+              <input type="text" name="age" ngModel="{{editActor?.age}}" class="form-control" id="age" placeholder="Age" Required>
+            </div>
+            <div class="form-group">
+              <label for="imageUrl">Image URL</label>
+              <input type="text" name="imageUrl" ngModel="{{editActor?.imageUrl}}" class="form-control" id="imageUrl" placeholder="Image URL" Required>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" (click)="onEditActor(editActorForm.value)">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- Delete Actor Modal-->
+  <div class="modal fade" id="deleteActorModal" tabindex="-1" role="dialog" aria-labelledby="deleteActorModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteActorModalLabel">Delete Actor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <p> Are you sure you want to delete the Actor '{{deleteActor?.name}}?'? </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="onDeleteActor(deleteActor.id)" data-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,50 @@
+<div  id="ContainerHL">  
+<div id="MainPoster">   
+  <img [src]=actor?.imageUrl height=280 width=200/>
+</div>
+</div>
+<div id="SelMovie">
+<div id="MovieInfoMain">     
+ <div id="Details">
+     
+  <table>
+    <tr><td class="Key">Name</td><td class="Value">{{actor?.name}}</td></tr> 
+    <tr><td class="Key">Age</td><td class="Value">{{actor?.age}}</td></tr>      
+  </table>
+ </div> 
+
+</div>
+</div>  
+<header>
+    <div class="container">
+      <nav>
+      <ul class="nav-container">
+          <li class="nav-item"><a href="#">HOME</a></li>
+          <li class="nav-item has-subnav">
+            <a href="#">MOVIES</a>
+                <div class="subnav">
+                  <ul>
+                   <li>Live Stream</li>
+                   <li>3D</li>
+                  </ul>
+                </div>
+          </li>
+        <li class="nav-item"><a href="#">CONTACT</a></li>
+        </ul>
+      </nav>
+    </div>
+    </header>
+    
+    <div *ngFor="let movie of moviesOfActor.slice(0,5);" class="accordion">
+        <ul>
+          <li>
+            <div class="image_title">
+              <a href="#">{{movie?.name}}</a>
+            </div>
+            <a [routerLink]="['/movieDetails',movie.id]"><img [src]=movie?.imageUrl [alt]=movie?.name border="0"></a>
+          </li>
+
+        </ul>
+      </div>
+
+      
