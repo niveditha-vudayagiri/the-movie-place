@@ -10,6 +10,7 @@ import { ActorComponent } from './actor/actor.component';
 import { RouterModule, Routes} from '@angular/router';
 import { ConfigureComponent } from './configure/configure.component'
 import { FormsModule } from '@angular/forms';
+import { AlertComponent } from './alert/alert.component';
 
 const routes: Routes= [
   {path:'home', component: HomeComponent, data:{header:true}},
@@ -27,7 +28,8 @@ const routes: Routes= [
     NavbarComponent,
     MovieDetailsComponent,
     ActorComponent,
-    ConfigureComponent
+    ConfigureComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

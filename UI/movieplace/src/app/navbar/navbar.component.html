@@ -36,7 +36,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" data-toggle="modal" data-target="signUpModal">
           Sign up
         </a>
       </li>
@@ -60,3 +60,44 @@
     </ul>
   </div>
 </nav>
+
+<!-- Sign Up Modal -->
+<div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signUpModalLabel">Add Actor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #signUpForm="ngForm" (ngSubmit)="onSignUp(signUpForm)">
+          <div class="form-group">
+            <div class="row">
+              <div class="col"><input type="text" class="form-control" name="first_name" placeholder="First Name" required="required"></div>
+              <div class="col"><input type="text" class="form-control" name="last_name" placeholder="Last Name" required="required"></div>
+            </div>        	
+          </div>
+          <div class="form-group">
+                <input type="email" class="form-control" ngModel name="email" placeholder="Email" required="required">
+          </div>
+          <div class="form-group">
+                  <input type="password" class="form-control" ngModel name="password" placeholder="Password" required="required">
+          </div>
+          <div class="form-group">
+                  <input type="password" class="form-control" ngModel name="confirm_password" placeholder="Confirm Password" required="required">
+          </div>        
+          <div class="form-group">
+            <label class="form-check-label"><input type="checkbox" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
+          </div>
+          <div class="modal-footer">
+            <button [disabled]="addActorForm.invalid" id="sign-up-form" type="submit" class="btn btn-primary">Confirm</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>

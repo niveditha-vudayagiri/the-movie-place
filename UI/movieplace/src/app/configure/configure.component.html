@@ -3,34 +3,16 @@
         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-0 col-xs-0 sidebar bg-dark">
             <ul class="nav nav-sidebar flex-column  text-white  mx-0">
                 <li class="nav-item active">
-                    <a href="#" class="nav-link text-white" aria-current="page">
+                    <a (click)=onClickActor() class="nav-link text-white" aria-current="page">
                     <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
                     Actor
                     </a>
                 </li>
                     
                 <li>
-                    <a href="#" class="nav-link text-white">
-                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+                    <a (click)=onClickMovie() class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2" ></use></svg>
                     Movie
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-white">
-                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
-                    Orders
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-white">
-                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
-                    Products
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-white">
-                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
-                    Customers
                     </a>
                 </li>
             </ul>
@@ -41,20 +23,20 @@
                 <button type="button" data-toggle="modal" data-target="#addActorModal" class="btn btn-dark ">Add Actor</button>
             </div>
             <div class="row">
-                <div *ngFor="let actor of actors" class="card-row col-xl-4 col-md-6 col-sm-6 col-xs-8">
+                <div *ngFor="let dispCard of editable" class="card-row col-xl-4 col-md-6 col-sm-6 col-xs-8">
                     <div class="card m-b-30">
                         <div class="card-body row">
                             <div class="col-6 card-image">
-                                <a [routerLink]="['/actor',actor.id]"><img src="{{actor?.imageUrl}}" alt="" class="img img-fluid rounded-circle"></a>
+                                <a ><img src="{{dispCard?.imageUrl}}" alt="" class="img img-fluid rounded-circle"></a>
                             </div>
                             <div class="col-6 card-title align-self-center mb-0">
-                                <h5><a [routerLink]="['/actor',actor.id]">{{actor?.name}}</a></h5>
+                                <h5><a>{{dispCard?.name}}</a></h5>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="float-right btn-group btn-group-sm">
-                                <a class="btn btn-primary tooltips" data-placement="top" (click)="onOpenModal(actor,'edit')" data-original-title="Edit" ><i class="fa fa-pencil"></i> </a>
-                                <a class="btn btn-secondary tooltips" data-placement="top" (click)="onOpenModal(actor,'delete')" data-original-title="Delete" ><i class="fa fa-times"></i></a>
+                                <a class="btn btn-primary tooltips" data-placement="top" (click)="onOpenModal(dispCard,'edit')" data-original-title="Edit" ><i class="fa fa-pencil"></i> </a>
+                                <a class="btn btn-secondary tooltips" data-placement="top" (click)="onOpenModal(dispCard,'delete')" data-original-title="Delete" ><i class="fa fa-times"></i></a>
                             </div>
                         </div>
                     </div>
@@ -97,7 +79,66 @@
         
       </div>
     </div>
-  </div>
+</div>
+
+<!-- Add Movie Modal -->
+<div class="modal fade" id="addMovieModal" tabindex="-1" role="dialog" aria-labelledby="addMovieModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMovieModalLabel">Add Actor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addMovieForm="ngForm" (ngSubmit)="onAddMovie(addMovieForm)">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" ngModel class="form-control" id="name" placeholder="Name" Required>
+              </div>              
+              <div class="form-group">
+                <label for="releaseYear">Release Year</label>
+                <input type="text" name="releaseYear" ngModel class="form-control" id="releaseYear" placeholder="Release Year" Required>
+              </div>
+              <div class="form-group">
+                  <label for="rating">Rating</label>
+                  <input type="text" name="rating" ngModel class="form-control" id="rating" placeholder="Rating" Required>
+              </div>
+              <div class="form-group">
+                  <label for="director">Director</label>
+                  <input type="text" name="director" ngModel class="form-control" id="director" placeholder="Director" Required>
+              </div>
+              <div class="form-group">
+                  <label for="watchPlatform">Watch Platform</label>
+                  <input type="text" name="watchPlatform" ngModel class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
+              </div>
+              <div class="form-group">
+                  <label for="watchPlatform">Watch Platform</label>
+                  <input type="text" name="watchPlatform" ngModel class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
+              </div>
+              <div class="form-group">
+                  <label for="description">Description</label>
+                  <input type="text" name="description" ngModel class="form-control" id="description" placeholder="Description" Required>
+              </div>
+              <div class="form-group">
+                  <label for="language">Language</label>
+                  <input type="text" name="language" ngModel class="form-control" id="language" placeholder="Language" Required>
+              </div>
+              <div class="form-group">
+                <label for="genre">Genre</label>
+                <input type="text" name="genre" ngModel class="form-control" id="genre" placeholder="Genre" Required>
+              </div>
+              <div class="modal-footer">
+                    <button [disabled]="addMovieForm.invalid" id="add-movie-form" type="submit" class="btn btn-primary">Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>          
+          </form>
+        </div>
+        
+      </div>
+    </div>
+</div>
 
 <!-- Edit Actor Modal-->
 <div class="modal fade" id="editActorModal" tabindex="-1" role="dialog" aria-labelledby="editActorModalLabel">
@@ -135,6 +176,67 @@
       </div>
     </div>
   </div>
+
+<!-- Edit Movie Modal-->
+<div class="modal fade" id="editMovieModal" tabindex="-1" role="dialog" aria-labelledby="editMovieModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editMovieModalLabel">Edit Actor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editMovieForm="ngForm">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" name="name" ngModel="{{editMovie?.name}}" class="form-control" id="name" placeholder="Name" Required>
+            </div>
+            <input type="hidden" ngModel="{{editMovie?.id}}" name="id" placeholder="id" id="id" class="form-control">
+            
+            <div class="form-group">
+              <label for="releaseYear">Release Year</label>
+              <input type="text" name="releaseYear" ngModel="{{editMovie?.releaseYear}}" class="form-control" id="releaseYear" placeholder="Release Year" Required>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating</label>
+                <input type="text" name="rating" ngModel="{{editMovie?.rating}}" class="form-control" id="rating" placeholder="Rating" Required>
+            </div>
+            <div class="form-group">
+                <label for="director">Director</label>
+                <input type="text" name="director" ngModel="{{editMovie?.director}}" class="form-control" id="director" placeholder="Director" Required>
+            </div>
+            <div class="form-group">
+                <label for="watchPlatform">Watch Platform</label>
+                <input type="text" name="watchPlatform" ngModel="{{editMovie?.watchPlatform}}" class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
+            </div>
+            <div class="form-group">
+                <label for="watchPlatform">Watch Platform</label>
+                <input type="text" name="watchPlatform" ngModel="{{editMovie?.watchPlatform}}" class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" name="description" ngModel="{{editMovie?.description}}" class="form-control" id="description" placeholder="Description" Required>
+            </div>
+            <div class="form-group">
+                <label for="language">Language</label>
+                <input type="text" name="language" ngModel="{{editMovie?.language}}" class="form-control" id="language" placeholder="Language" Required>
+            </div>
+            <div class="form-group">
+              <label for="genre">Genre</label>
+              <input type="text" name="genre" ngModel="{{editMovie?.genre}}" class="form-control" id="genre" placeholder="Genre" Required>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" (click)="onEditMovie(editMovieForm.value)">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
   
   
   <!-- Delete Actor Modal-->
@@ -152,6 +254,27 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" (click)="onDeleteActor(deleteActor.id)" data-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Movie Modal-->
+  <div class="modal fade" id="deleteMovieModal" tabindex="-1" role="dialog" aria-labelledby="deleteMovieModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteMovieModalLabel">Delete Actor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <p> Are you sure you want to delete the Movie '{{deleteMovie?.name}}?'? </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="onDeleteMovie(deleteMovie.id)" data-dismiss="modal">Yes</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         </div>
       </div>
