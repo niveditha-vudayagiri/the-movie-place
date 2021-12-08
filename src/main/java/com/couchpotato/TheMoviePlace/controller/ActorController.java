@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.couchpotato.TheMoviePlace.Service.ActorService;
@@ -22,6 +23,7 @@ public class ActorController {
 	}
 	
 	@GetMapping("/all")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<List<Actor>> GetAllActors(){
 		List<Actor> listOfActors=actorService.GetAllActors();
 		return new ResponseEntity<>(listOfActors,HttpStatus.OK);
@@ -40,18 +42,21 @@ public class ActorController {
 	}
 	
 	@PostMapping("/add")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Actor> addActor(@RequestBody Actor actor) {
 		Actor _actor=actorService.addActor(actor);
 		return new ResponseEntity<>(_actor,HttpStatus.OK);
 	}
 	
 	@PutMapping("/edit")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Actor> editActor(@RequestBody Actor actor) {
 		Actor _actor=actorService.editActor(actor);
 		return new ResponseEntity<>(_actor,HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Actor> deleteActor(@PathVariable Long id) {
 		actorService.deleteActor(id);
 		return new ResponseEntity<>(HttpStatus.OK);

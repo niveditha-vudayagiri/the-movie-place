@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.couchpotato.TheMoviePlace.Service.MovieService;
@@ -58,6 +59,7 @@ public class MovieController {
 	}
 	
 	@PostMapping("/add")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
 		Movie _movie = movieService.addMovie(movie);
 		return new ResponseEntity<>(_movie,HttpStatus.OK);
@@ -70,6 +72,7 @@ public class MovieController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
 		movieService.deleteMovie(id);
 		return new ResponseEntity<>(HttpStatus.OK);

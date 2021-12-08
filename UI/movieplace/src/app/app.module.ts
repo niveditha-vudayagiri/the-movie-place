@@ -1,3 +1,4 @@
+import { AccountService } from './model/service/account.service';
 import { MovieDetailsComponent } from './movieDetails/movieDetails.component';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -10,13 +11,14 @@ import { ActorComponent } from './actor/actor.component';
 import { RouterModule, Routes} from '@angular/router';
 import { ConfigureComponent } from './configure/configure.component'
 import { FormsModule } from '@angular/forms';
-import { AlertComponent } from './alert/alert.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes= [
   {path:'home', component: HomeComponent, data:{header:true}},
   {path:'movieDetails/:movieId', component: MovieDetailsComponent, data:{header:true} },
   {path: 'actor/:actorId', component: ActorComponent},
   {path: 'configure', component: ConfigureComponent},
+  {path: 'login',component: LoginComponent},
   {path: '',   redirectTo: '/home', pathMatch: 'full' }
 ];
 
@@ -29,7 +31,7 @@ const routes: Routes= [
     MovieDetailsComponent,
     ActorComponent,
     ConfigureComponent,
-    AlertComponent
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,9 @@ const routes: Routes= [
   [
     RouterModule
   ],
-  providers: [],
+  providers: [
+    AccountService
+  ],
   bootstrap: [ AppComponent],
 
 })
