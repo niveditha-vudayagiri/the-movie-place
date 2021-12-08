@@ -53,23 +53,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http.csrf().disable();
 		http.cors();
 		http.authorizeRequests()
-		.antMatchers("/auth**").authenticated()
-		.anyRequest().permitAll()
-		//.and()
-		/*.formLogin()
-		.permitAll()
-		/*.loginPage("/login.html")
-		.loginProcessingUrl("/login")*/
-		//.defaultSuccessUrl("/home",true)
-		/*.failureUrl("/login.html?error=true")
-		//.failureHandler(authenticationFailureHandler())
+		.antMatchers("/auth**").permitAll()
+		.anyRequest().authenticated()
 		.and()
-		.logout()
-		.logoutUrl("/logout")
-		.deleteCookies("JSESSIONID")
-		//.logourSuccessHandler(logoutSuccessHandler())*/
+		.formLogin().permitAll()
 		.and()
-		.httpBasic();
+		.logout().permitAll();
 	}
 
 	@Bean
