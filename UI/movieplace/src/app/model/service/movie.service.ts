@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Movie } from '../movie';
 import { Observable } from 'rxjs';
+import { Actor } from '../actor';
 
 @Injectable({
   providedIn: 'root'
@@ -33,14 +34,14 @@ export class MovieService {
   }
 
   public addMovie(movie: Movie):Observable<Movie>{
-    return this.http.post<Movie>(`${this.apiServerUrl}/add/`,movie);
+    return this.http.post<Movie>(`${this.apiServerUrl}/movie/add/`,movie);
   }
 
   public editMovie(movie: Movie):Observable<Movie>{
-    return this.http.put<Movie>(`${this.apiServerUrl}/edit/`,movie);
+    return this.http.put<Movie>(`${this.apiServerUrl}/movie/edit/`,movie);
   }
 
   public deleteMovie(id: number):Observable<Movie>{
-    return this.http.delete<Movie>(`${this.apiServerUrl}/edit/${id}`);
+    return this.http.delete<Movie>(`${this.apiServerUrl}/movie/delete/${id}`);
   }
 }

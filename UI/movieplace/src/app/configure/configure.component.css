@@ -1,6 +1,9 @@
 @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ;
+
 @import 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
 
+@import 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
+@import "~@ng-select/ng-select/themes/default.theme.css";
 body{
     margin-top:20px;
     background: #f5f5f5;
