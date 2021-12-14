@@ -1,3 +1,4 @@
+import { CastExpr } from '@angular/compiler';
 import { Actor } from './actor';
 export interface Movie{
     id : number;
@@ -5,7 +6,7 @@ export interface Movie{
     releaseYear: String;
     rating: number;
     director: String;
-    cast: Actor[];
+    cast: Set<Actor>;
     review: String;
     watchPlatform: String;
     description: String;

@@ -38,7 +38,7 @@
         <tr><td class="Key">Director</td><td class="Value">{{movie?.director}}</td></tr>
         <tr><td class="Key">Language</td><td class="Value">{{movie?.language}}</td></tr>
         <tr><td class="Key">Cast</td><td class="Value">
-            <div *ngFor="let actor of movie?.cast" >
+            <div *ngFor="let actor of cast" >
                 <a class="cast-mem" [routerLink]="['/actor',actor.id]">{{actor?.name}}</a>
             </div>
         </td></tr>

@@ -20,8 +20,10 @@
         </div>
         <div class="main col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
             <div class="row inner-first-row" >
-                <button type="button" data-toggle="modal" data-target="#addActorModal" class="btn btn-dark ">Add Actor</button>
-            </div>
+                <button type="button" (click)="onOpenModal(null,'add')" *ngIf="showActors" class="btn btn-dark ">Add Actor</button>
+                <button type="button" (click)="onOpenModal(null,'add')" *ngIf="showMovies" class="btn btn-dark ">Add Movie</button>
+            
+              </div>
             <div class="row">
                 <div *ngFor="let dispCard of editable" class="card-row col-xl-4 col-md-6 col-sm-6 col-xs-8">
                     <div class="card m-b-30">
@@ -57,21 +59,21 @@
           </button>
         </div>
         <div class="modal-body">
-          <form #addActorForm="ngForm" (ngSubmit)="onAddActor(addActorForm)">
+          <form [formGroup]="ActorForm" (ngSubmit)="onAddActor()">
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" Required>
+              <input type="text" formControlName="name" name="name" class="form-control" id="name" placeholder="Name" Required>
             </div>
             <div class="form-group">
               <label for="phone">Age</label>
-              <input type="text" ngModel name="age" class="form-control" id="age" placeholder="Age" Required>
+              <input type="text" formControlName="age" name="age" class="form-control" id="age" placeholder="Age" Required>
             </div>
             <div class="form-group">
               <label for="imageUrl">Image URL</label>
-              <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
+              <input type="text" formControlName="imageUrl" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
             </div>
             <div class="modal-footer">
-              <button [disabled]="addActorForm.invalid" id="add-actor-form" type="submit" class="btn btn-primary">Confirm</button>
+              <button [disabled]="ActorForm.invalid" id="add-actor-form" type="submit" class="btn btn-primary">Confirm</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </form>
@@ -92,45 +94,113 @@
           </button>
         </div>
         <div class="modal-body">
-          <form #addMovieForm="ngForm" (ngSubmit)="onAddMovie(addMovieForm)">
+          <form [formGroup]="MovieForm" (ngSubmit)="onAddMovie()">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" name="name" ngModel class="form-control" id="name" placeholder="Name" Required>
+                <input type="text" name="name" formControlName="name" class="form-control" id="name" placeholder="Name" Required>
+                <div *ngIf="movieName.invalid && (movieReleaseYear.dirty || movieName.touched)"
+                    class="alert alert-danger">
+                  <div *ngIf="movieName.errors['required']">
+                    This field is required
+                  </div>
+                  <div *ngIf="movieName.errors['maxLength']">
+                    Name should have a max length of 50
+                  </div>
+                </div> 
               </div>              
               <div class="form-group">
                 <label for="releaseYear">Release Year</label>
-                <input type="text" name="releaseYear" ngModel class="form-control" id="releaseYear" placeholder="Release Year" Required>
+                <input type="text" name="releaseYear" formControlName="releaseYear" class="form-control" id="releaseYear" placeholder="Release Year" Required>
+                <div *ngIf="movieReleaseYear.invalid && (movieReleaseYear.dirty || movieReleaseYear.touched)"
+                    class="alert alert-danger">
+                  <div *ngIf="movieReleaseYear.errors['required']">
+                    This field is required
+                  </div>
+                  <div *ngIf="movieReleaseYear.errors['pattern']">
+                    Release Year should only contain digits
+                  </div>
+                  <div *ngIf="movieReleaseYear.errors['min']">
+                    Release Year should be above 1800
+                  </div>
+                  <div *ngIf="movieReleaseYear.errors['max']">
+                    Release Year cannot be above 2022
+                  </div>
+                </div>
               </div>
               <div class="form-group">
                   <label for="rating">Rating</label>
-                  <input type="text" name="rating" ngModel class="form-control" id="rating" placeholder="Rating" Required>
+                  <input type="text" name="rating" formControlName="rating" class="form-control" id="rating" placeholder="Rating" Required>
+                  <div *ngIf="movieRating.invalid && (movieRating.dirty || movieRating.touched)"
+                    class="alert alert-danger">
+                    <div *ngIf="movieRating.errors['required']">
+                      This field is required
+                    </div>
+                    <div *ngIf="movieRating.errors['pattern']">
+                      Rating should be a decimal between 0 to 10
+                    </div>
+                    <div *ngIf="movieRating.errors['min']">
+                      Release Year should be above 0
+                    </div>
+                    <div *ngIf="movieRating.errors['max']">
+                      Release Year cannot be above 10
+                    </div>
+                  </div>
               </div>
               <div class="form-group">
                   <label for="director">Director</label>
-                  <input type="text" name="director" ngModel class="form-control" id="director" placeholder="Director" Required>
-              </div>
+                  <input type="text" name="director" formControlName="director" class="form-control" id="director" placeholder="Director" Required>
+                  <div *ngIf="movieDirector.invalid && (movieDirector.dirty || movieDirector.touched)"
+                    class="alert alert-danger">
+                    <div *ngIf="movieDirector.errors['required']">
+                      This field is required
+                    </div>
+                    <div *ngIf="movieDirector.errors['maxLength']">
+                      Name should have a max length of 30
+                    </div>
+                  </div> 
+                </div>
               <div class="form-group">
                   <label for="watchPlatform">Watch Platform</label>
-                  <input type="text" name="watchPlatform" ngModel class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
-              </div>
-              <div class="form-group">
-                  <label for="watchPlatform">Watch Platform</label>
-                  <input type="text" name="watchPlatform" ngModel class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
+                  <select formControlName="watchPlatform" class="form-control" id="watchPlatform" Required>
+                    <option disabled>Select</option>
+                    <option *ngFor="let platform of platforms" [ngValue]="platform">{{platform}}</option>
+                  </select>
+                  <div *ngIf="movieWatchPlatform.invalid && (movieWatchPlatform.dirty || movieWatchPlatform.touched)"
+                    class="alert alert-danger">
+                    <div *ngIf="movieWatchPlatform.errors['required']">
+                      This field is required
+                    </div>
+                  </div> 
               </div>
               <div class="form-group">
                   <label for="description">Description</label>
-                  <input type="text" name="description" ngModel class="form-control" id="description" placeholder="Description" Required>
+                  <input type="text" name="description" formControlName="description" class="form-control" id="description" placeholder="Description" Required>
               </div>
               <div class="form-group">
                   <label for="language">Language</label>
-                  <input type="text" name="language" ngModel class="form-control" id="language" placeholder="Language" Required>
+                  <input type="text" name="language" formControlName="language" class="form-control" id="language" placeholder="Language" Required>
               </div>
               <div class="form-group">
                 <label for="genre">Genre</label>
-                <input type="text" name="genre" ngModel class="form-control" id="genre" placeholder="Genre" Required>
+                <input type="text" name="genre" formControlName="genre" class="form-control" id="genre" placeholder="Genre" Required>
+              </div>
+              <div class="form-group">
+                <label for="genre">Image Url</label>
+                <input type="text" name="imageUrl" formControlName="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
+              </div>
+              <div class="form-group">
+                <label for="genre">Review</label>
+                <input type="text" name="review" formControlName="review" class="form-control" id="review" placeholder="Review" Required>
+              </div>
+              <div class="form-group">
+                <label>Cast</label>
+                <select multiple formControlName="cast" (change)=onChangeActor($event)>
+                  <option *ngFor="let actor of listOfActors" [ngValue]="actor">{{actor.name}}</option>
+                </select>
+                    
               </div>
               <div class="modal-footer">
-                    <button [disabled]="addMovieForm.invalid" id="add-movie-form" type="submit" class="btn btn-primary">Confirm</button>
+                    <button [disabled]="MovieForm.invalid" id="add-movie-form" type="submit" class="btn btn-primary">Confirm</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>          
           </form>
@@ -151,23 +221,23 @@
           </button>
         </div>
         <div class="modal-body">
-          <form #editActorForm="ngForm">
+          <form [formGroup]="ActorForm">
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" name="name" ngModel="{{editActor?.name}}" class="form-control" id="name" placeholder="Name" Required>
+              <input type="text" name="name" formControlName="name" class="form-control" id="name" placeholder="Name" Required>
             </div>
-            <input type="hidden" ngModel="{{editActor?.id}}" name="id" placeholder="id" id="id" class="form-control">
+            <input type="hidden" formControlName="id" name="id" placeholder="id" id="id" class="form-control">
             
             <div class="form-group">
               <label for="age">Age</label>
-              <input type="text" name="age" ngModel="{{editActor?.age}}" class="form-control" id="age" placeholder="Age" Required>
+              <input type="text" name="age" formControlName="age" class="form-control" id="age" placeholder="Age" Required>
             </div>
             <div class="form-group">
               <label for="imageUrl">Image URL</label>
-              <input type="text" name="imageUrl" ngModel="{{editActor?.imageUrl}}" class="form-control" id="imageUrl" placeholder="Image URL" Required>
+              <input type="text" name="imageUrl" formControlName="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" (click)="onEditActor(editActorForm.value)">Save changes</button>
+              <button type="submit" class="btn btn-primary" (click)="onEditActor()">Save changes</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </form>
@@ -188,47 +258,57 @@
           </button>
         </div>
         <div class="modal-body">
-          <form #editMovieForm="ngForm">
+          <form [formGroup]="MovieForm">
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" name="name" ngModel="{{editMovie?.name}}" class="form-control" id="name" placeholder="Name" Required>
+              <input type="text" name="name" formControlName="name" class="form-control" id="name" placeholder="Name" Required>
             </div>
-            <input type="hidden" ngModel="{{editMovie?.id}}" name="id" placeholder="id" id="id" class="form-control">
+            <input type="hidden" formControlName="id" name="id" placeholder="id" id="id" class="form-control">
             
             <div class="form-group">
               <label for="releaseYear">Release Year</label>
-              <input type="text" name="releaseYear" ngModel="{{editMovie?.releaseYear}}" class="form-control" id="releaseYear" placeholder="Release Year" Required>
+              <input type="text" name="releaseYear" formControlName="releaseYear" class="form-control" id="releaseYear" placeholder="Release Year" Required>
             </div>
             <div class="form-group">
                 <label for="rating">Rating</label>
-                <input type="text" name="rating" ngModel="{{editMovie?.rating}}" class="form-control" id="rating" placeholder="Rating" Required>
+                <input type="text" name="rating" formControlName="rating" class="form-control" id="rating" placeholder="Rating" Required>
             </div>
             <div class="form-group">
                 <label for="director">Director</label>
-                <input type="text" name="director" ngModel="{{editMovie?.director}}" class="form-control" id="director" placeholder="Director" Required>
+                <input type="text" name="director" formControlName="director" class="form-control" id="director" placeholder="Director" Required>
             </div>
             <div class="form-group">
                 <label for="watchPlatform">Watch Platform</label>
-                <input type="text" name="watchPlatform" ngModel="{{editMovie?.watchPlatform}}" class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
-            </div>
-            <div class="form-group">
-                <label for="watchPlatform">Watch Platform</label>
-                <input type="text" name="watchPlatform" ngModel="{{editMovie?.watchPlatform}}" class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
+                <input type="text" name="watchPlatform" formControlName="watchPlatform" class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <input type="text" name="description" ngModel="{{editMovie?.description}}" class="form-control" id="description" placeholder="Description" Required>
+                <input type="text" name="description" formControlName="description" class="form-control" id="description" placeholder="Description" Required>
             </div>
             <div class="form-group">
                 <label for="language">Language</label>
-                <input type="text" name="language" ngModel="{{editMovie?.language}}" class="form-control" id="language" placeholder="Language" Required>
+                <input type="text" name="language" formControlName="language" class="form-control" id="language" placeholder="Language" Required>
             </div>
             <div class="form-group">
               <label for="genre">Genre</label>
-              <input type="text" name="genre" ngModel="{{editMovie?.genre}}" class="form-control" id="genre" placeholder="Genre" Required>
+              <input type="text" name="genre" formControlName="genre" class="form-control" id="genre" placeholder="Genre" Required>
+            </div>
+            <div class="form-group">
+              <label for="genre">Image Url</label>
+              <input type="text" name="imageUrl" formControlName="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
+            </div>
+            <div class="form-group">
+              <label for="genre">Review</label>
+              <input type="text" name="review" formControlName="review" class="form-control" id="review" placeholder="review" Required>
+            </div>
+            <div class="form-group">
+              <label>Cast</label>
+              <select multiple formControlName="cast" (change)=onChangeActor($event)>
+                <option *ngFor="let actor of listOfActors" [ngValue]="actor">{{actor.name}}</option>
+              </select>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" (click)="onEditMovie(editMovieForm.value)">Save changes</button>
+              <button type="submit" class="btn btn-primary" (click)="onEditMovie()">Save changes</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </form>
@@ -250,10 +330,10 @@
           </button>
         </div>
         <div class="modal-body">
-        <p> Are you sure you want to delete the Actor '{{deleteActor?.name}}?'? </p>
+        <p > Are you sure you want to delete the Actor '{{af['name'].value}}?'? </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="onDeleteActor(deleteActor.id)" data-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-primary" (click)="onDeleteActor()" data-dismiss="modal">Yes</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         </div>
       </div>
@@ -265,18 +345,20 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteMovieModalLabel">Delete Actor</h5>
+          <h5 class="modal-title" id="deleteMovieModalLabel">Delete Movie</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-        <p> Are you sure you want to delete the Movie '{{deleteMovie?.name}}?'? </p>
+        <p> Are you sure you want to delete the Movie '{{mf['name'].value}}?'? </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="onDeleteMovie(deleteMovie.id)" data-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-primary" (click)="onDeleteMovie()" data-dismiss="modal">Yes</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         </div>
       </div>
     </div>
   </div>
+
+  

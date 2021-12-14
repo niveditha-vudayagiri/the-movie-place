@@ -1,8 +1,10 @@
-import { AccountService } from './model/service/account.service';
+import { CustomValidationService } from './helpers/customValidation.service';
+import { AppRoutingModule } from './app-routing.module';
+import { AuthenticationService } from './model/service/authentication.service';
 import { MovieDetailsComponent } from './movieDetails/movieDetails.component';
 import { HomeComponent } from './home/home.component';
-import { HttpClientModule } from '@angular/common/http';
-import { NgModule, Component } from '@angular/core';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgModule, Component,NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -10,18 +12,13 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ActorComponent } from './actor/actor.component';
 import { RouterModule, Routes} from '@angular/router';
 import { ConfigureComponent } from './configure/configure.component'
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
-
-const routes: Routes= [
-  {path:'home', component: HomeComponent, data:{header:true}},
-  {path:'movieDetails/:movieId', component: MovieDetailsComponent, data:{header:true} },
-  {path: 'actor/:actorId', component: ActorComponent},
-  {path: 'configure', component: ConfigureComponent},
-  {path: 'login',component: LoginComponent},
-  {path: '',   redirectTo: '/home', pathMatch: 'full' }
-];
-
+import { AdminComponent } from './admin/admin.component';
+import { ErrorInterceptor } from './helpers/error.interceptor';
+import { JwtInterceptor } from './helpers/jwt.interceptor';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { NgSelectModule } from '@ng-select/ng-select';
 @NgModule({
   
   declarations: [
@@ -31,20 +28,29 @@ const routes: Routes= [
     MovieDetailsComponent,
     ActorComponent,
     ConfigureComponent,
-    LoginComponent
+    LoginComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(routes),
-    FormsModule
+    FormsModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule.forRoot(),
+    NgSelectModule
   ],
+  schemas:[NO_ERRORS_SCHEMA], 
   exports:
   [
     RouterModule
   ],
   providers: [
-    AccountService
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+
+    JwtInterceptor,
+    CustomValidationService
   ],
   bootstrap: [ AppComponent],
 

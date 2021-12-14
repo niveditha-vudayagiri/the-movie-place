@@ -37,22 +37,11 @@ export class ActorComponent implements OnInit{
           next: 
             (response: Actor)=> {
             this.actor=response;
-            console.log(this.actor);
-            this.getMoviesOfActor(this.actor);
+            this.moviesOfActor=response.movies;
           }
           ,
           error:() => console.error("Can't fetch actor!")
       })
   }
 
-  getMoviesOfActor(actor: Actor):void{
-      this.movieService.searchMovie(actor?.name.toString(),1).subscribe({
-        next: 
-          (response:Movie[])=>{
-            this.moviesOfActor=response;
-            console.log(this.moviesOfActor);
-          },
-          error:() => console.error("Can't fetch movies!")
-      })
-  }
 }
