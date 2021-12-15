@@ -16,32 +16,57 @@ export class ActorComponent implements OnInit{
   public actor : Actor;
   public actorId: number;
   public moviesOfActor: Movie[];
-
+  public moviesArray: Movie[];
   ngOnInit(){
     this.activatedRoute.paramMap.subscribe(params=>{
         this.actorId=parseInt(params.get('actorId'));
     })
 
-    this.getActor(this.actorId);
+    this.getActorById(this.actorId);
     
   }
 
   constructor(private actorService: ActorService,
     private activatedRoute: ActivatedRoute,
     private movieService: MovieService){
-        
+        this.moviesOfActor=[];
+        this.moviesArray=[];
   }
 
-  getActor(id:number):void{
+  addToMovies(movie:Movie){
+    this.moviesArray.push(movie);
+  }
+
+  getActorById(id:number):void{
       this.actorService.getActor(id).subscribe({
           next: 
             (response: Actor)=> {
             this.actor=response;
             this.moviesOfActor=response.movies;
+            this.moviesOfActor.forEach((movie:any)=>{
+              if(typeof movie == "number"){
+                this.getMovieById(movie);
+               }
+               else
+               this.moviesArray.push(movie);
+            })
           }
           ,
           error:() => console.error("Can't fetch actor!")
       })
   }
+
+  getMovieById(id:number):void{
+    this.movieService.getMovie(id).subscribe({
+        next: 
+          (response: Movie)=> {
+            console.log(response);
+              this.addToMovies(response);
+        }
+        ,
+        error:() => console.error("Can't fetch movies!")
+    })
+
+}
 
 }

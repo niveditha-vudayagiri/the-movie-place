@@ -16,6 +16,9 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 export class ConfigureComponent implements OnInit {
 
   public editable: any[];
+  public movies:any[];
+  public actors:any[];
+
   public showMovies: boolean;
   public showActors: boolean; 
   public listOfActors:Actor[]=[];
@@ -37,60 +40,8 @@ export class ConfigureComponent implements OnInit {
      return this.MovieForm.controls;
    }
 
-   get actorName(){
-     return this.ActorForm.get('name');
-   }
-
-   get actorAge(){
-     return this.ActorForm.get('age');
-   }
-
-   get actorImageUrl(){
-     return this.ActorForm.get('imageUrl');
-   }
-
    get movieCast(){
      return this.MovieForm.get('cast');
-   }
-
-   get movieName() {
-     return this.MovieForm.get('name');
-   }
-
-   get movieReleaseYear(){
-     return this.MovieForm.get('releaseYear');
-   }
-
-   get movieRating(){
-     return this.MovieForm.get('rating');
-   }
-
-   get movieDirector(){
-     return this.MovieForm.get('director');
-   }
-
-   get movieWatchPlatform(){
-     return this.MovieForm.get('watchPlatform');
-   }
-
-   get movieDescription(){
-     return this.MovieForm.get('description');
-   }
-
-   get movieLanguage(){
-     return this.MovieForm.get('language');
-   }
-
-   get movieGenre(){
-     return this.MovieForm.get('genre');
-   }
-
-   get movieImageUrl(){
-     return this.MovieForm.get('imageUrl');
-   }
-
-   get movieReview(){
-     return this.MovieForm.get('review');
    }
 
    onChangeActor(e:any){
@@ -102,8 +53,6 @@ export class ConfigureComponent implements OnInit {
    }
 
    onChangeGenre(e:any){
-
-    const genreArray: FormArray =this.MovieForm.get('genre') as  FormArray;
       if(e.target.checked)
         this.selectedGenres.push(e.target.ngValue);
       else{
@@ -120,7 +69,7 @@ export class ConfigureComponent implements OnInit {
     var request = new XMLHttpRequest();
     request.open("GET", e.target.value, true);
     request.send();
-    request.timeout =5000;
+    request.timeout =100000;
     request.onload = function() {
       if (request.status != 200) //if(statusText == OK)
       {
@@ -150,6 +99,7 @@ export class ConfigureComponent implements OnInit {
               private fb: FormBuilder,
               private customValidator:CustomValidationService) { 
 
+    this.movies=[];
     let numbersRegEx = '^[0-9].+$';
     let decimalRegEx='[0-9]+\.?[0-9]+'
 
@@ -245,23 +195,55 @@ export class ConfigureComponent implements OnInit {
   }
 
   getAllMovies():void{
+    this.movies=[];
     this.movieService.getAllMovies(1).subscribe({
       next: (response: Movie[])=>{
-        this.editable=response;
+        response.forEach((movie:Movie)=>{
+          if(typeof movie =="number"){
+            this.getMovie(movie);
+          }
+          else
+            this.movies.push(movie);
+        })
+        this.editable=this.movies;
       },
       error: () => console.error("Can't fetch movies!")
     }
     )
   }
 
+  getMovie(id:number):void{
+    this.movieService.getMovie(id).subscribe({
+      next: (movieFromApi:Movie)=>{
+        this.movies.push(movieFromApi);
+      }
+    })
+  }
+
   getAllActors():void{
+    this.actors=[];
     this.actorService.getAllActors().subscribe({
       next: (response: Actor[])=>{
-        this.editable=response;
+        response.forEach((actor:Actor)=>{
+          if(typeof actor =="number"){
+            this.getActor(actor);
+          }
+          else
+            this.actors.push(actor);
+        })
+        this.editable=this.actors;
       },
-      error: () => console.log("Can't fetch actors!")
+      error: () => console.error("Can't fetch actors!")
     }
     )
+  }
+
+  getActor(id:number):void{
+    this.actorService.getActor(id).subscribe({
+      next: (actorFromApi:Actor)=>{
+        this.actors.push(actorFromApi);
+      }
+    })
   }
 
   getListOfActors():void{
@@ -408,7 +390,6 @@ export class ConfigureComponent implements OnInit {
           });
         
         });
-
         button.setAttribute('data-target','#MovieModal');
       }
         

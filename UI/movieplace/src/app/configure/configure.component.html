@@ -63,9 +63,9 @@
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" formControlName="name" name="name" class="form-control" id="name" placeholder="Name" Required>
-              <div *ngIf="actorName.invalid && (actorName.dirty || actorName.touched)"
+              <div *ngIf="af['name'].invalid && (af['name'].dirty || af['name'].touched)"
                     class="alert alert-danger">
-                <div *ngIf="actorName.errors['required']">
+                <div *ngIf="af['name'].errors['required']">
                   This field is required
                 </div>
               </div>
@@ -73,12 +73,12 @@
             <div class="form-group">
               <label for="age">Age</label>
               <input type="text" formControlName="age" name="age" class="form-control" id="age" placeholder="Age" Required>
-              <div *ngIf="actorAge.invalid && (actorAge.dirty || actorAge.touched)"
+              <div *ngIf="af['age'].invalid && (af['age'].dirty || af['age'].touched)"
                     class="alert alert-danger">
-                <div *ngIf="actorAge.errors['required']">
+                <div *ngIf="af['age'].errors['required']">
                   This field is required
                 </div>
-                <div *ngIf="actorAge.errors['min'] || actorAge.errors['max']">
+                <div *ngIf="af['age'].errors['min'] || af['age'].errors['max']">
                   Age should be between 0 to 200.
                 </div>
               </div>
@@ -86,9 +86,9 @@
             <div class="form-group">
               <label for="imageUrl">Image URL</label>
               <input type="text" formControlName="imageUrl" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" (change)="onChangeActorImageUrl($event)" Required>
-              <div *ngIf="(actorImageUrl.invalid) && (actorImageUrl.dirty || actorImageUrl.touched)"
+              <div *ngIf="(af['imageUrl'].invalid) && (af['imageUrl'].dirty || af['imageUrl'].touched)"
                     class="alert alert-danger">
-                  <div *ngIf="actorImageUrl.errors['required'] || actorImageUrl.errors['invalid']">
+                  <div *ngIf="af['imageUrl'].errors['required'] || af['imageUrl'].errors['invalid']">
                     Please enter a valid image URL
                   </div>
                 </div>
@@ -119,12 +119,12 @@
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" name="name" formControlName="name" class="form-control" id="name" placeholder="Name" Required>
-                <div *ngIf="movieName.invalid && (movieName.dirty || movieName.touched)"
+                <div *ngIf="mf['name'].invalid && (mf['name'].dirty || mf['name'].touched)"
                     class="alert alert-danger">
-                  <div *ngIf="movieName.errors['required']">
+                  <div *ngIf="mf['name'].errors['required']">
                     This field is required
                   </div>
-                  <div *ngIf="movieName.errors['maxLength']">
+                  <div *ngIf="mf['name'].errors['maxLength']">
                     Name should have a max length of 50
                   </div>
                 </div> 
@@ -132,18 +132,18 @@
               <div class="form-group">
                 <label for="releaseYear">Release Year</label>
                 <input type="text" name="releaseYear" formControlName="releaseYear" class="form-control" id="releaseYear" placeholder="Release Year" Required>
-                <div *ngIf="movieReleaseYear.invalid && (movieReleaseYear.dirty || movieReleaseYear.touched)"
+                <div *ngIf="mf['releaseYear'].invalid && (mf['releaseYear'].dirty || mf['releaseYear'].touched)"
                     class="alert alert-danger">
-                  <div *ngIf="movieReleaseYear.errors['required']">
+                  <div *ngIf="mf['releaseYear'].errors['required']">
                     This field is required
                   </div>
-                  <div *ngIf="movieReleaseYear.errors['pattern']">
+                  <div *ngIf="mf['releaseYear'].errors['pattern']">
                     Release Year should only contain digits
                   </div>
-                  <div *ngIf="movieReleaseYear.errors['min']">
+                  <div *ngIf="mf['releaseYear'].errors['min']">
                     Release Year should be above 1800
                   </div>
-                  <div *ngIf="movieReleaseYear.errors['max']">
+                  <div *ngIf="mf['releaseYear'].errors['max']">
                     Release Year cannot be above 2022
                   </div>
                 </div>
@@ -151,18 +151,18 @@
               <div class="form-group">
                   <label for="rating">Rating</label>
                   <input type="text" name="rating" formControlName="rating" class="form-control" id="rating" placeholder="Rating" Required>
-                  <div *ngIf="movieRating.invalid && (movieRating.dirty || movieRating.touched)"
+                  <div *ngIf="mf['rating'].invalid && (mf['rating'].dirty || mf['rating'].touched)"
                     class="alert alert-danger">
-                    <div *ngIf="movieRating.errors['required']">
+                    <div *ngIf="mf['rating'].errors['required']">
                       This field is required
                     </div>
-                    <div *ngIf="movieRating.errors['pattern']">
+                    <div *ngIf="mf['rating'].errors['pattern']">
                       Rating should be a decimal between 0 to 10
                     </div>
-                    <div *ngIf="movieRating.errors['min']">
+                    <div *ngIf="mf['rating'].errors['min']">
                       Release Year should be above 0
                     </div>
-                    <div *ngIf="movieRating.errors['max']">
+                    <div *ngIf="mf['rating'].errors['max']">
                       Release Year cannot be above 10
                     </div>
                   </div>
@@ -170,12 +170,12 @@
               <div class="form-group">
                   <label for="director">Director</label>
                   <input type="text" name="director" formControlName="director" class="form-control" id="director" placeholder="Director" Required>
-                  <div *ngIf="movieDirector.invalid && (movieDirector.dirty || movieDirector.touched)"
+                  <div *ngIf="mf['director'].invalid && (mf['director'].dirty || mf['director'].touched)"
                     class="alert alert-danger">
-                    <div *ngIf="movieDirector.errors['required']">
+                    <div *ngIf="mf['director'].errors['required']">
                       This field is required
                     </div>
-                    <div *ngIf="movieDirector.errors['maxLength']">
+                    <div *ngIf="mf['director'].errors['maxLength']">
                       Name should have a max length of 30
                     </div>
                   </div> 
@@ -186,9 +186,9 @@
                     <option value="" disabled selected>Choose the watch platform</option>
                     <option *ngFor="let platform of platforms" [ngValue]="platform">{{platform}}</option>
                   </select>
-                  <div *ngIf="movieWatchPlatform.invalid && (movieWatchPlatform.dirty || movieWatchPlatform.touched)"
+                  <div *ngIf="mf['watchPlatform'].invalid && (mf['watchPlatform'].dirty || mf['watchPlatform'].touched)"
                     class="alert alert-danger">
-                    <div *ngIf="movieWatchPlatform.errors['required']">
+                    <div *ngIf="mf['watchPlatform'].errors['required']">
                       Please choose a watch platform
                     </div>
                   </div> 
@@ -196,9 +196,9 @@
               <div class="form-group">
                   <label for="description">Description</label>
                   <textarea formControlName="description" placeholder="Description" class="form-control"></textarea>
-                  <div *ngIf="movieDescription.invalid && (movieDescription.dirty || movieDescription.touched)"
+                  <div *ngIf="mf['description'].invalid && (mf['description'].dirty || mf['description'].touched)"
                     class="alert alert-danger">
-                    <div *ngIf="movieDescription.errors['required']">
+                    <div *ngIf="mf['description'].errors['required']">
                       This field is required
                     </div>
                   </div>
@@ -209,9 +209,9 @@
                     <option value="" disabled selected>Choose the language</option>
                     <option *ngFor="let language of languages" [ngValue]="language">{{language}}</option>
                   </select>
-                  <div *ngIf="movieLanguage.invalid && (movieLanguage.dirty || movieLanguage.touched)"
+                  <div *ngIf="mf['language'].invalid && (mf['language'].dirty || mf['language'].touched)"
                     class="alert alert-danger">
-                    <div *ngIf="movieLanguage.errors['required']">
+                    <div *ngIf="mf['language'].errors['required']">
                       Please select the language of the movie
                     </div>
                   </div>
@@ -223,9 +223,9 @@
                   [ngValue]="genre.label" [checked]="genre.selected" (change)="onChangeGenre($event)" >
                   {{genre.label}}
                 </div>
-                <div *ngIf="(movieGenre.invalid) && (movieGenre.dirty || movieGenre.touched)"
+                <div *ngIf="(mf['genre'].invalid) && (mf['genre'].dirty || mf['genre'].touched)"
                     class="alert alert-danger">
-                    <div *ngIf="movieGenre.errors['required']">
+                    <div *ngIf="mf['genre'].errors['required']">
                       Please select atleast one genre
                     </div>
                 </div>
@@ -233,9 +233,9 @@
               <div class="form-group">
                 <label for="imageUrl">Image Url</label>
                 <input type="text" name="imageUrl" formControlName="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" (change)="onChangeMovieImageUrl($event)" Required>
-                <div *ngIf="(movieImageUrl.invalid) && (movieImageUrl.dirty || movieImageUrl.touched)"
+                <div *ngIf="(mf['imageUrl'].invalid) && (mf['imageUrl'].dirty || mf['imageUrl'].touched)"
                     class="alert alert-danger">
-                  <div *ngIf="movieImageUrl.errors['required'] || movieImageUrl.errors['invalid']">
+                  <div *ngIf="mf['imageUrl'].errors['required'] || mf['imageUrl'].errors['invalid']">
                     Please enter a valid image URL
                   </div>
                 </div>
@@ -243,9 +243,9 @@
               <div class="form-group">
                 <label for="review">Review</label>
                 <input type="text" name="review" formControlName="review" class="form-control" id="review" placeholder="Review" Required>
-                <div *ngIf="(movieReview.invalid) && (movieReview.dirty || movieReview.touched)"
+                <div *ngIf="(mf['review'].invalid) && (mf['review'].dirty || mf['review'].touched)"
                     class="alert alert-danger">
-                  <div *ngIf="movieReview.errors['required']">
+                  <div *ngIf="mf['review'].errors['required']">
                     Please enter Review
                   </div>
                 </div>

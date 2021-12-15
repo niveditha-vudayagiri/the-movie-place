@@ -36,8 +36,6 @@ import { map } from 'rxjs';
           this.userSubject.next(user);
           return user;
         }));
-
-        console.log('User logged in');
     }
 
     logout(){
