@@ -48,12 +48,12 @@
 </div>
 </div>
 
-<!-- Add Actor Modal -->
-<div class="modal fade" id="addActorModal" tabindex="-1" role="dialog" aria-labelledby="addActorModalLabel">
+<!-- Actor Modal -->
+<div class="modal fade" id="ActorModal" tabindex="-1" role="dialog" aria-labelledby="ActorModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addActorModalLabel">Add Actor</h5>
+          <h5 class="modal-title" id="ActorModalLabel">Add Actor</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -63,14 +63,35 @@
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" formControlName="name" name="name" class="form-control" id="name" placeholder="Name" Required>
+              <div *ngIf="actorName.invalid && (actorName.dirty || actorName.touched)"
+                    class="alert alert-danger">
+                <div *ngIf="actorName.errors['required']">
+                  This field is required
+                </div>
+              </div>
             </div>
             <div class="form-group">
-              <label for="phone">Age</label>
+              <label for="age">Age</label>
               <input type="text" formControlName="age" name="age" class="form-control" id="age" placeholder="Age" Required>
+              <div *ngIf="actorAge.invalid && (actorAge.dirty || actorAge.touched)"
+                    class="alert alert-danger">
+                <div *ngIf="actorAge.errors['required']">
+                  This field is required
+                </div>
+                <div *ngIf="actorAge.errors['min'] || actorAge.errors['max']">
+                  Age should be between 0 to 200.
+                </div>
+              </div>
             </div>
             <div class="form-group">
               <label for="imageUrl">Image URL</label>
-              <input type="text" formControlName="imageUrl" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
+              <input type="text" formControlName="imageUrl" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" (change)="onChangeActorImageUrl($event)" Required>
+              <div *ngIf="(actorImageUrl.invalid) && (actorImageUrl.dirty || actorImageUrl.touched)"
+                    class="alert alert-danger">
+                  <div *ngIf="actorImageUrl.errors['required'] || actorImageUrl.errors['invalid']">
+                    Please enter a valid image URL
+                  </div>
+                </div>
             </div>
             <div class="modal-footer">
               <button [disabled]="ActorForm.invalid" id="add-actor-form" type="submit" class="btn btn-primary">Confirm</button>
@@ -83,12 +104,12 @@
     </div>
 </div>
 
-<!-- Add Movie Modal -->
-<div class="modal fade" id="addMovieModal" tabindex="-1" role="dialog" aria-labelledby="addMovieModalLabel">
+<!-- Movie Modal -->
+<div class="modal fade" id="MovieModal" tabindex="-1" role="dialog" aria-labelledby="MovieModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addMovieModalLabel">Add Actor</h5>
+          <h5 class="modal-title" id="MovieModalLabel">Add Actor</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -98,7 +119,7 @@
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" name="name" formControlName="name" class="form-control" id="name" placeholder="Name" Required>
-                <div *ngIf="movieName.invalid && (movieReleaseYear.dirty || movieName.touched)"
+                <div *ngIf="movieName.invalid && (movieName.dirty || movieName.touched)"
                     class="alert alert-danger">
                   <div *ngIf="movieName.errors['required']">
                     This field is required
@@ -162,46 +183,88 @@
               <div class="form-group">
                   <label for="watchPlatform">Watch Platform</label>
                   <select formControlName="watchPlatform" class="form-control" id="watchPlatform" Required>
-                    <option disabled>Select</option>
+                    <option value="" disabled selected>Choose the watch platform</option>
                     <option *ngFor="let platform of platforms" [ngValue]="platform">{{platform}}</option>
                   </select>
                   <div *ngIf="movieWatchPlatform.invalid && (movieWatchPlatform.dirty || movieWatchPlatform.touched)"
                     class="alert alert-danger">
                     <div *ngIf="movieWatchPlatform.errors['required']">
-                      This field is required
+                      Please choose a watch platform
                     </div>
                   </div> 
               </div>
               <div class="form-group">
                   <label for="description">Description</label>
-                  <input type="text" name="description" formControlName="description" class="form-control" id="description" placeholder="Description" Required>
+                  <textarea formControlName="description" placeholder="Description" class="form-control"></textarea>
+                  <div *ngIf="movieDescription.invalid && (movieDescription.dirty || movieDescription.touched)"
+                    class="alert alert-danger">
+                    <div *ngIf="movieDescription.errors['required']">
+                      This field is required
+                    </div>
+                  </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" id="languageDropdown">
                   <label for="language">Language</label>
-                  <input type="text" name="language" formControlName="language" class="form-control" id="language" placeholder="Language" Required>
+                  <select class="form-control" formControlName="language">
+                    <option value="" disabled selected>Choose the language</option>
+                    <option *ngFor="let language of languages" [ngValue]="language">{{language}}</option>
+                  </select>
+                  <div *ngIf="movieLanguage.invalid && (movieLanguage.dirty || movieLanguage.touched)"
+                    class="alert alert-danger">
+                    <div *ngIf="movieLanguage.errors['required']">
+                      Please select the language of the movie
+                    </div>
+                  </div>
               </div>
               <div class="form-group">
                 <label for="genre">Genre</label>
-                <input type="text" name="genre" formControlName="genre" class="form-control" id="genre" placeholder="Genre" Required>
+                <div *ngFor="let genre of allGenres">
+                  <input type="checkbox" formControlName="genre" name="genre" id="genre" 
+                  [ngValue]="genre.label" [checked]="genre.selected" (change)="onChangeGenre($event)" >
+                  {{genre.label}}
+                </div>
+                <div *ngIf="(movieGenre.invalid) && (movieGenre.dirty || movieGenre.touched)"
+                    class="alert alert-danger">
+                    <div *ngIf="movieGenre.errors['required']">
+                      Please select atleast one genre
+                    </div>
+                </div>
               </div>
               <div class="form-group">
-                <label for="genre">Image Url</label>
-                <input type="text" name="imageUrl" formControlName="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
+                <label for="imageUrl">Image Url</label>
+                <input type="text" name="imageUrl" formControlName="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" (change)="onChangeMovieImageUrl($event)" Required>
+                <div *ngIf="(movieImageUrl.invalid) && (movieImageUrl.dirty || movieImageUrl.touched)"
+                    class="alert alert-danger">
+                  <div *ngIf="movieImageUrl.errors['required'] || movieImageUrl.errors['invalid']">
+                    Please enter a valid image URL
+                  </div>
+                </div>
               </div>
               <div class="form-group">
-                <label for="genre">Review</label>
+                <label for="review">Review</label>
                 <input type="text" name="review" formControlName="review" class="form-control" id="review" placeholder="Review" Required>
+                <div *ngIf="(movieReview.invalid) && (movieReview.dirty || movieReview.touched)"
+                    class="alert alert-danger">
+                  <div *ngIf="movieReview.errors['required']">
+                    Please enter Review
+                  </div>
+                </div>
               </div>
               <div class="form-group">
                 <label>Cast</label>
-                <select multiple formControlName="cast" (change)=onChangeActor($event)>
+                <select multiple formControlName="cast" (change)=onChangeActor($event) class="form-control">
                   <option *ngFor="let actor of listOfActors" [ngValue]="actor">{{actor.name}}</option>
                 </select>
-                    
+                <div *ngIf="(movieCast.invalid) && (movieCast.dirty || movieCast.touched)"
+                    class="alert alert-danger">
+                  <div *ngIf="movieCast.errors['required'] || movieCast.errors['required']">
+                    Please select atleast 1 actor
+                  </div>
+                </div>
               </div>
               <div class="modal-footer">
-                    <button [disabled]="MovieForm.invalid" id="add-movie-form" type="submit" class="btn btn-primary">Confirm</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button [disabled]="MovieForm.invalid" id="add-movie-form" type="submit" class="btn btn-primary" >Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeMovieModal">Close</button>
               </div>          
           </form>
         </div>
@@ -210,115 +273,6 @@
     </div>
 </div>
 
-<!-- Edit Actor Modal-->
-<div class="modal fade" id="editActorModal" tabindex="-1" role="dialog" aria-labelledby="editActorModalLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editActorModalLabel">Edit Actor</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="ActorForm">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" name="name" formControlName="name" class="form-control" id="name" placeholder="Name" Required>
-            </div>
-            <input type="hidden" formControlName="id" name="id" placeholder="id" id="id" class="form-control">
-            
-            <div class="form-group">
-              <label for="age">Age</label>
-              <input type="text" name="age" formControlName="age" class="form-control" id="age" placeholder="Age" Required>
-            </div>
-            <div class="form-group">
-              <label for="imageUrl">Image URL</label>
-              <input type="text" name="imageUrl" formControlName="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" (click)="onEditActor()">Save changes</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </form>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-
-<!-- Edit Movie Modal-->
-<div class="modal fade" id="editMovieModal" tabindex="-1" role="dialog" aria-labelledby="editMovieModalLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editMovieModalLabel">Edit Actor</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="MovieForm">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" name="name" formControlName="name" class="form-control" id="name" placeholder="Name" Required>
-            </div>
-            <input type="hidden" formControlName="id" name="id" placeholder="id" id="id" class="form-control">
-            
-            <div class="form-group">
-              <label for="releaseYear">Release Year</label>
-              <input type="text" name="releaseYear" formControlName="releaseYear" class="form-control" id="releaseYear" placeholder="Release Year" Required>
-            </div>
-            <div class="form-group">
-                <label for="rating">Rating</label>
-                <input type="text" name="rating" formControlName="rating" class="form-control" id="rating" placeholder="Rating" Required>
-            </div>
-            <div class="form-group">
-                <label for="director">Director</label>
-                <input type="text" name="director" formControlName="director" class="form-control" id="director" placeholder="Director" Required>
-            </div>
-            <div class="form-group">
-                <label for="watchPlatform">Watch Platform</label>
-                <input type="text" name="watchPlatform" formControlName="watchPlatform" class="form-control" id="watchPlatform" placeholder="Watch Platform" Required>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" name="description" formControlName="description" class="form-control" id="description" placeholder="Description" Required>
-            </div>
-            <div class="form-group">
-                <label for="language">Language</label>
-                <input type="text" name="language" formControlName="language" class="form-control" id="language" placeholder="Language" Required>
-            </div>
-            <div class="form-group">
-              <label for="genre">Genre</label>
-              <input type="text" name="genre" formControlName="genre" class="form-control" id="genre" placeholder="Genre" Required>
-            </div>
-            <div class="form-group">
-              <label for="genre">Image Url</label>
-              <input type="text" name="imageUrl" formControlName="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" Required>
-            </div>
-            <div class="form-group">
-              <label for="genre">Review</label>
-              <input type="text" name="review" formControlName="review" class="form-control" id="review" placeholder="review" Required>
-            </div>
-            <div class="form-group">
-              <label>Cast</label>
-              <select multiple formControlName="cast" (change)=onChangeActor($event)>
-                <option *ngFor="let actor of listOfActors" [ngValue]="actor">{{actor.name}}</option>
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" (click)="onEditMovie()">Save changes</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </form>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-  
-  
   <!-- Delete Actor Modal-->
   <div class="modal fade" id="deleteActorModal" tabindex="-1" role="dialog" aria-labelledby="deleteActorModalLabel">
     <div class="modal-dialog" role="document">
@@ -360,5 +314,3 @@
       </div>
     </div>
   </div>
-
-  
