@@ -3,7 +3,7 @@ import { Actor } from './../model/actor';
 import { ActorService } from './../model/service/actor.service';
 import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../model/service/movie.service';
-import { FormGroup, FormControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, ValidationErrors, Validators, FormArray } from '@angular/forms';
 import { Movie } from '../model/movie';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
@@ -16,12 +16,20 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 export class ConfigureComponent implements OnInit {
 
   public editable: any[];
+  public movies:any[];
+  public actors:any[];
+
   public showMovies: boolean;
   public showActors: boolean; 
   public listOfActors:Actor[]=[];
-  public selectedCast = new Set<Actor>()
+  public selectedCast = new Set<Actor>();
+  public selectedGenres : string[]=[];
+  public allGenres:any[]=[];
   public dropdownSettings:IDropdownSettings={};
   public platforms: string[]=[];
+  public languages:string[]=[];
+  public isAddMovieMode: boolean;
+  public isAddActorMode: boolean;
    ActorForm: FormGroup;
    MovieForm: FormGroup;
    get af(){
@@ -32,51 +40,103 @@ export class ConfigureComponent implements OnInit {
      return this.MovieForm.controls;
    }
 
-   get cast(){
+   get movieCast(){
      return this.MovieForm.get('cast');
    }
 
-   get movieName() {
-     return this.MovieForm.get('name');
-   }
-
-   get movieReleaseYear(){
-     return this.MovieForm.get('releaseYear');
-   }
-
-   get movieRating(){
-     return this.MovieForm.get('rating');
-   }
-
-   get movieDirector(){
-     return this.MovieForm.get('director');
-   }
-
-   get movieWatchPlatform(){
-     return this.MovieForm.get('watchPlatform');
-   }
    onChangeActor(e:any){
      let actor = this.MovieForm.get('cast').value[0];
-     console.log(actor);
-     //Get Cash obj and push
      this.selectedCast.add(actor);
 
-     console.log(this.selectedCast);
+     if(this.selectedCast.size==0)
+      this.MovieForm.controls['cast'].setErrors({'required':true});
    }
+
+   onChangeGenre(e:any){
+      if(e.target.checked)
+        this.selectedGenres.push(e.target.ngValue);
+      else{
+        const index = this.selectedGenres.findIndex(prop => prop === e.target.ngValue)
+        this.selectedGenres.splice(index,1)
+      }
+      if(this.selectedGenres.length==0)
+        this.MovieForm.controls['genre'].setErrors({'required':true});
+   }
+
+   onChangeMovieImageUrl(e:any){
+
+    let imageUrlControl = this.MovieForm.controls['imageUrl'];
+    var request = new XMLHttpRequest();
+    request.open("GET", e.target.value, true);
+    request.send();
+    request.timeout =100000;
+    request.onload = function() {
+      if (request.status != 200) //if(statusText == OK)
+      {
+        imageUrlControl.setErrors({'invalid':true});
+      } 
+    }
+ }
+
+ onChangeActorImageUrl(e:any){
+
+  let imageUrlControl = this.ActorForm.controls['imageUrl'];
+  var request = new XMLHttpRequest();
+  request.open("GET", e.target.value, true);
+  request.send();
+  request.timeout =100000;
+  request.onload = function() {
+    if (request.status != 200) //if(statusText == OK)
+    {
+      imageUrlControl.setErrors({'invalid':true});
+    } 
+  }
+}
+
 
   constructor(private actorService: ActorService,
               private movieService: MovieService ,
               private fb: FormBuilder,
               private customValidator:CustomValidationService) { 
 
+    this.movies=[];
     let numbersRegEx = '^[0-9].+$';
     let decimalRegEx='[0-9]+\.?[0-9]+'
 
     this.platforms = ['Hulu','Amazon Prime','Netflix','HBO','Hotstar','Disney+','Aha','Youtube'];
+    this.languages=["Afrikaans","Albanian","Amharic","Arabic","Aragonese","Armenian","Asturian","Azerbaijani","Basque","Belarusian","Bengali","Bosnian","Breton",
+          "Bulgarian","Catalan","Central Kurdish","Chinese","Chinese (Hong Kong)","Chinese (Simplified)","Chinese (Traditional)","Corsican","Croatian","Czech","Danish",
+          "Dutch","English","English (Australia)","English (Canada)","English (India)","English (New Zealand)","English (South Africa)","English (United Kingdom)","English (United States)",
+          "Esperanto","Estonian","Faroese","Filipino","Finnish","French","French (Canada)","French (France)","French (Switzerland)","Galician","Georgian","German",
+          "German (Austria)","German (Germany)","German (Liechtenstein)","German (Switzerland)","Greek","Guarani","Gujarati","Hausa","Hawaiian","Hebrew","Hindi","Hungarian","Icelandic",
+          "Indonesian","Interlingua","Irish","Italian","Italian (Italy)","Italian (Switzerland)","Japanese","Kannada","Kazakh","Khmer","Korean","Kurdish","Kyrgyz",
+          "Lao","Latin","Latvian","Lingala","Lithuanian","Macedonian","Malay","Malayalam","Maltese","Marathi","Mongolian","Nepali","Norwegian","Norwegian Bokmål","Norwegian Nynorsk","Occitan",
+          "Oriya","Oromo","Pashto","Persian","Polish","Portuguese","Portuguese (Brazil)","Portuguese (Portugal)","Punjabi","Quechua","Romanian","Romanian (Moldova)","Romansh",
+          "Russian","Scottish Gaelic","Serbian","Serbo","Shona","Sindhi","Sinhala","Slovak","Slovenian","Somali","Southern Sotho","Spanish","Spanish (Argentina)","Spanish (Latin America)","Spanish (Mexico)",
+          "Spanish (Spain)","Spanish (United States)","Sundanese","Swahili","Swedish","Tajik","Tamil","Tatar","Telugu","Thai","Tigrinya","Tongan","Turkish","Turkmen","Twi",
+          "Ukrainian","Urdu","Uyghur","Uzbek","Vietnamese","Walloon","Welsh","Western Frisian","Xhosa","Yiddish","Yoruba","Zulu"
+      ];
+      this.allGenres=[
+        {label:'Action',selected:false},
+        {label:'Adventure',selected:false},
+        {label:'Animated',selected:false},
+        {label:'Comedy',selected:false},
+        {label:'Drama',selected:false},
+        {label:'Fantasy',selected:false},
+        {label:'Historical',selected:false},
+        {label:'Horror',selected:false},
+        {label:'Sci-fi',selected:false},
+        {label:'Thriller',selected:false},
+        {label:'Western',selected:false},
+        {label:'International',selected:false},
+      ];
     this.ActorForm=this.fb.group({  
                   id: [''],
                   name: ['',Validators.required],
-                  age: ['',[Validators.required,Validators.pattern(numbersRegEx)]],
+                  age: ['',[Validators.required,
+                    Validators.pattern(numbersRegEx),
+                    Validators.min(0),
+                    Validators.max(200)]],
                   imageUrl: ['',Validators.required],
                   movies: ['']
                 });
@@ -109,8 +169,8 @@ export class ConfigureComponent implements OnInit {
                   watchPlatform: ['',Validators.required],
                   description: ['',Validators.required],
                   imageUrl: ['',Validators.required],
-                  language: ['',[Validators.required]],
-                  genre: ['',Validators.required]
+                  language: ['',Validators.required],
+                  genre: ['',Validators.required],
                  })
               }
 
@@ -135,23 +195,55 @@ export class ConfigureComponent implements OnInit {
   }
 
   getAllMovies():void{
+    this.movies=[];
     this.movieService.getAllMovies(1).subscribe({
       next: (response: Movie[])=>{
-        this.editable=response;
+        response.forEach((movie:Movie)=>{
+          if(typeof movie =="number"){
+            this.getMovie(movie);
+          }
+          else
+            this.movies.push(movie);
+        })
+        this.editable=this.movies;
       },
       error: () => console.error("Can't fetch movies!")
     }
     )
   }
 
+  getMovie(id:number):void{
+    this.movieService.getMovie(id).subscribe({
+      next: (movieFromApi:Movie)=>{
+        this.movies.push(movieFromApi);
+      }
+    })
+  }
+
   getAllActors():void{
+    this.actors=[];
     this.actorService.getAllActors().subscribe({
       next: (response: Actor[])=>{
-        this.editable=response;
+        response.forEach((actor:Actor)=>{
+          if(typeof actor =="number"){
+            this.getActor(actor);
+          }
+          else
+            this.actors.push(actor);
+        })
+        this.editable=this.actors;
       },
-      error: () => console.log("Can't fetch actors!")
+      error: () => console.error("Can't fetch actors!")
     }
     )
+  }
+
+  getActor(id:number):void{
+    this.actorService.getActor(id).subscribe({
+      next: (actorFromApi:Actor)=>{
+        this.actors.push(actorFromApi);
+      }
+    })
   }
 
   getListOfActors():void{
@@ -167,6 +259,7 @@ export class ConfigureComponent implements OnInit {
   public onAddActor():void{
     document.getElementById('add-actor-form').click();
   
+    if(this.isAddActorMode){
     this.actorService.addActor(this.ActorForm.value).subscribe({
      next: (response:Actor)=>{
         console.log(response);
@@ -174,11 +267,17 @@ export class ConfigureComponent implements OnInit {
       },
       error:
        ()=> console.log("Error! Cannot add Actor!")
-    
-    }        
-    )
-    this.ActorForm.reset();
+    })
+  }else{
+
+    this.actorService.editActor(this.ActorForm.value).subscribe(
+      (response:Actor)=>{
+        console.log(response);
+        this.getAllActors();
+      })
   }
+    this.ActorForm.reset();
+}
 
   public onAddMovie():void{
     let actorsArray: Actor[] =[];
@@ -187,6 +286,7 @@ export class ConfigureComponent implements OnInit {
     document.getElementById('add-movie-form').click();
 
     let totalErrors=0;
+
     //Check for form validation errors
     Object.keys(this.MovieForm.controls).forEach(key=> {
       const controlErrors: ValidationErrors = this.MovieForm.get(key).errors;
@@ -195,65 +295,32 @@ export class ConfigureComponent implements OnInit {
       }
     })
 
-    console.log( 'Number of errors:',totalErrors);
-
     if(totalErrors==0){
     this.MovieForm.patchValue({
-      cast: actorsArray
+      cast: actorsArray,
+      genre: this.selectedGenres.toString()
     });
-
-    this.movieService.addMovie(this.MovieForm.value).subscribe({
-     next: (response:Movie)=>{
-        console.log(response);
-        this.getAllMovies();
-      },
-      error:
-       ()=> console.log("Error! Cannot add Movie!")
-    }        
-    )
-
-    for(let actor of this.selectedCast)
-    {
-      console.log("add"+actor+"add");
-    }
-  
-    
-
-    this.MovieForm.reset();
-    this.selectedCast.clear();
+    if(this.isAddMovieMode){
+          this.movieService.addMovie(this.MovieForm.value).subscribe({
+          next: (response:Movie)=>{
+              this.getAllMovies();
+            },
+            error:
+            ()=> console.log("Error! Cannot add Movie!")
+          })
+        }
+  else{
+        this.movieService.editMovie(this.MovieForm.value).subscribe(
+          (response:Movie)=>{
+            this.getAllMovies();
+          }
+        )} 
   }
-  }
-
-  public onEditActor():void{
-  
-    this.actorService.editActor(this.ActorForm.value).subscribe(
-      (response:Actor)=>{
-        console.log(response);
-        this.getAllActors();
-      }
-    )
-  
-  }
-
-  public onEditMovie():void{
-
-    console.log(this.selectedCast);
-    let actorsArray: Actor[] =[];
-
-    actorsArray=Array.from(this.selectedCast);
-    this.MovieForm.patchValue({
-      cast: actorsArray
-    });
-
-    console.log(this.MovieForm.value);
-    this.movieService.editMovie(this.MovieForm.value).subscribe(
-      (response:Movie)=>{
-        console.log(response);
-        this.getAllMovies();
-      }
-    )
-  
-  }
+  this.MovieForm.reset();
+  this.selectedCast.clear();
+  this.selectedGenres= [];
+  document.getElementById('closeMovieModal').click();
+}
 
   public onDeleteActor():void{
   
@@ -275,11 +342,13 @@ export class ConfigureComponent implements OnInit {
     button.style.display='none';
     button.setAttribute('data-toggle','modal');
     if(mode == 'add'){
-      if(this.showActors)
-        button.setAttribute('data-target','#addActorModal');
+      if(this.showActors){
+        button.setAttribute('data-target','#ActorModal');
+      }
       else{
+        this.isAddMovieMode=true;
         this.getListOfActors();
-        button.setAttribute('data-target','#addMovieModal');
+        button.setAttribute('data-target','#MovieModal');
       }
     }
     else if(mode == 'edit'){
@@ -290,9 +359,11 @@ export class ConfigureComponent implements OnInit {
           age: obj.age,
           imageUrl: obj.imageUrl
         });
-        button.setAttribute('data-target','#editActorModal');
+        button.setAttribute('data-target','#ActorModal');
       }
       else{
+
+        this.isAddMovieMode=false;
         this.MovieForm.patchValue({
           id : obj.id,
           name : obj.name,
@@ -304,12 +375,22 @@ export class ConfigureComponent implements OnInit {
           watchPlatform: obj.watchPlatform,
           description: obj.description,
           imageUrl: obj.imageUrl,
-          language: obj.language,
-          genre: obj.genre
+          language: obj.language
         });
+
+        //Select Checkboxes 
+        let genres:string;
+        genres=obj.genre;
+        genres.split(',').forEach(genre=>{
+          console.log(genre);
+          this.selectedGenres.push(genre);
+          this.allGenres.forEach(actualGenre=>{
+            if(genre===actualGenre.label)
+              actualGenre.selected=true;
+          });
         
-        
-        button.setAttribute('data-target','#editMovieModal');
+        });
+        button.setAttribute('data-target','#MovieModal');
       }
         
       

@@ -37,7 +37,6 @@ import { map } from 'rxjs';
           return user;
         }));
 
-        console.log('User logged in');
     }
 
     logout(){
