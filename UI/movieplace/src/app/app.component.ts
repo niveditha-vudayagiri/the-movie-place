@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Role } from './model/role';
+import { Role, RoleEnum } from './model/role';
 import { AuthenticationService } from './model/service/authentication.service';
 import { User } from './model/user';
 import { Injectable } from '@angular/core';
@@ -20,7 +20,14 @@ export class AppComponent {
   }
 
   get isAdmin(){
-    return this.user && this.user.role==Role.Admin;
+    let roles=this.user.roles;
+    let isAdminRoleExist=false;
+    
+    roles.forEach(role=>{
+      if(role.role==RoleEnum.Admin)  isAdminRoleExist=true;
+    })
+
+    return this.user && isAdminRoleExist;
   }
 
   logout(){

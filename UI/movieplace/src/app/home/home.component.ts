@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit{
   public movies: Movie[];
   public movieArray: Movie[];
   loading = false;
-  user :User;
+  public user :User;
   userFromApi: User;
   searchTerm: string;
 
