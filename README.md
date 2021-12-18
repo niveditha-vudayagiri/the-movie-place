@@ -1,10 +1,35 @@
-﻿# the-movie-place
-The backend is written in Java with springboot. Open the source code 'themovieplace' in IDE of your choice and start as Java Application. 
+# The Movie Place
+The Movie Place is the one-stop destination for movie enthusiasts. Explore, watch, review and more.
 
-The frontend is written with Angular - typescript. 
-Open terminal and navigate to the folder of the source code and go to UI folder, use the command 'ng serve' to start the application.
+## Table of Contents
+- [Installation](#installation)
+- [Database Setup](#database-setup)
+- [Features](#feastures)
+- [Future Updates](#future-updates)
 
-Open localhost:8080/ in browser.
+## Installation
 
-Prerequisite:
-Install MySQL database and create a new database 'movieplace'
+### Java backend
+Open the Java application under the folder `TheMoviePlace` in any IDE of your choice. Run the application with any idea of choice.
+This application will run in the localhost:8080/
+
+### Angular Frontend
+Open the code under folder `TheMoviePlace/UI` in any IDE of choice and serve the application. 
+Open terminal and navigate to above location and use the command `ng serve`
+
+##Database Setup
+Install MySQL and create a new database `MoviePlace`
+
+## Features
+- Basic role based authentication.
+- Browse movies, actors and more.
+- Configuration option available only for Admin.
+
+## Future Updates
+- User can add reviews for movie.
+- User can add movies to favorite.
+- Embed streaming links.
+- Pagination 
+- Get Top listed and recent movies.
+- Add contributer role
+- Browse music and more
