@@ -4,10 +4,8 @@ export interface Movie{
     id : number;
     name : String;
     releaseYear: String;
-    rating: number;
     director: String;
     cast: Set<Actor>;
-    review: String;
     watchPlatform: String;
     description: String;
     imageUrl: String;

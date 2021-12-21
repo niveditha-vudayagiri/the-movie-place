@@ -5,8 +5,6 @@ import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../model/service/movie.service';
 import { FormGroup, FormControl, FormBuilder, ValidationErrors, Validators, FormArray } from '@angular/forms';
 import { Movie } from '../model/movie';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-configure',
@@ -18,30 +16,27 @@ export class ConfigureComponent implements OnInit {
   public editable: any[];
   public movies:any[];
   public actors:any[];
+  public platforms: string[]=[];
+  public languages: string[]=[];
 
   public showMovies: boolean;
   public showActors: boolean; 
-  public listOfActors:Actor[]=[];
+  public isAddMovieMode: boolean;
+  public isAddActorMode: boolean;
+
   public selectedCast = new Set<Actor>();
   public selectedGenres : string[]=[];
   public allGenres:any[]=[];
-  public dropdownSettings:IDropdownSettings={};
-  public platforms: string[]=[];
-  public languages:string[]=[];
-  public isAddMovieMode: boolean;
-  public isAddActorMode: boolean;
+
    ActorForm: FormGroup;
    MovieForm: FormGroup;
+
    get af(){
      return this.ActorForm.controls;
    }
 
    get mf(){
      return this.MovieForm.controls;
-   }
-
-   get movieCast(){
-     return this.MovieForm.get('cast');
    }
 
    onChangeActor(e:any){
@@ -154,18 +149,11 @@ export class ConfigureComponent implements OnInit {
                     Validators.min(1800),
                     Validators.max(2022)
                   ]],
-                  rating: ['',[
-                    Validators.required,
-                    Validators.pattern(decimalRegEx),
-                    Validators.min(0.1),
-                    Validators.max(9.9)
-                  ]],
                   director: ['',[
                     Validators.required,
                     Validators.maxLength(30)
                   ]],
                   cast: ['',Validators.required],
-                  review: [''],
                   watchPlatform: ['',Validators.required],
                   description: ['',Validators.required],
                   imageUrl: ['',Validators.required],
@@ -179,7 +167,7 @@ export class ConfigureComponent implements OnInit {
     this.showActors = false;
     this.showMovies = true;
     
-    this.getListOfActors();
+    this.getAllActors();
   }
   
   onClickMovie():void{
@@ -190,6 +178,7 @@ export class ConfigureComponent implements OnInit {
 
   onClickActor():void{
     this.getAllActors();
+    this.editable=this.actors;
     this.showActors = true;
     this.showMovies=false;
   }
@@ -231,7 +220,6 @@ export class ConfigureComponent implements OnInit {
           else
             this.actors.push(actor);
         })
-        this.editable=this.actors;
       },
       error: () => console.error("Can't fetch actors!")
     }
@@ -244,16 +232,6 @@ export class ConfigureComponent implements OnInit {
         this.actors.push(actorFromApi);
       }
     })
-  }
-
-  getListOfActors():void{
-    this.actorService.getAllActors().subscribe({
-      next: (response: Actor[])=>{
-        this.listOfActors=response;
-      },
-      error: () => console.log("Can't fetch actors!")
-    }
-    )
   }
 
   public onAddActor():void{
@@ -347,7 +325,7 @@ export class ConfigureComponent implements OnInit {
       }
       else{
         this.isAddMovieMode=true;
-        this.getListOfActors();
+        this.getAllActors();
         button.setAttribute('data-target','#MovieModal');
       }
     }
@@ -368,10 +346,8 @@ export class ConfigureComponent implements OnInit {
           id : obj.id,
           name : obj.name,
           releaseYear: obj.releaseYear,
-          rating: obj.rating,
           director: obj.director,
           cast: obj.cast,
-          review: obj.review,
           watchPlatform: obj.watchPlatform,
           description: obj.description,
           imageUrl: obj.imageUrl,
@@ -410,10 +386,8 @@ export class ConfigureComponent implements OnInit {
           id : obj.id,
           name : obj.name,
           releaseYear: obj.releaseYear,
-          rating: obj.rating,
           director: obj.director,
           cast: obj.cast,
-          review: obj.cast,
           watchPlatform: obj.watchPlatform,
           description: obj.watchPlatform,
           imageUrl: obj.imageUrl,

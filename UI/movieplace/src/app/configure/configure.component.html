@@ -149,25 +149,6 @@
                 </div>
               </div>
               <div class="form-group">
-                  <label for="rating">Rating</label>
-                  <input type="text" name="rating" formControlName="rating" class="form-control" id="rating" placeholder="Rating" Required>
-                  <div *ngIf="mf['rating'].invalid && (mf['rating'].dirty || mf['rating'].touched)"
-                    class="alert alert-danger">
-                    <div *ngIf="mf['rating'].errors['required']">
-                      This field is required
-                    </div>
-                    <div *ngIf="mf['rating'].errors['pattern']">
-                      Rating should be a decimal between 0 to 10
-                    </div>
-                    <div *ngIf="mf['rating'].errors['min']">
-                      Release Year should be above 0
-                    </div>
-                    <div *ngIf="mf['rating'].errors['max']">
-                      Release Year cannot be above 10
-                    </div>
-                  </div>
-              </div>
-              <div class="form-group">
                   <label for="director">Director</label>
                   <input type="text" name="director" formControlName="director" class="form-control" id="director" placeholder="Director" Required>
                   <div *ngIf="mf['director'].invalid && (mf['director'].dirty || mf['director'].touched)"
@@ -241,23 +222,13 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="review">Review</label>
-                <input type="text" name="review" formControlName="review" class="form-control" id="review" placeholder="Review" Required>
-                <div *ngIf="(mf['review'].invalid) && (mf['review'].dirty || mf['review'].touched)"
-                    class="alert alert-danger">
-                  <div *ngIf="mf['review'].errors['required']">
-                    Please enter Review
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
                 <label>Cast</label>
                 <select multiple formControlName="cast" (change)=onChangeActor($event) class="form-control">
-                  <option *ngFor="let actor of listOfActors" [ngValue]="actor">{{actor.name}}</option>
+                  <option *ngFor="let actor of actors" [ngValue]="actor">{{actor.name}}</option>
                 </select>
-                <div *ngIf="(movieCast.invalid) && (movieCast.dirty || movieCast.touched)"
+                <div *ngIf="(mf['cast'].invalid) && (mf['cast'].dirty || mf['cast'].touched)"
                     class="alert alert-danger">
-                  <div *ngIf="movieCast.errors['required'] || movieCast.errors['required']">
+                  <div *ngIf="mf['cast'].errors['required'] || mf['cast'].errors['required']">
                     Please select atleast 1 actor
                   </div>
                 </div>
