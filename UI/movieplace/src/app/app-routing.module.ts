@@ -1,3 +1,4 @@
+import { ProfileComponent } from './profile/profile.component';
 import { AuthGuard } from './helpers/auth.guard';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, CanActivate } from '@angular/router';
@@ -11,8 +12,7 @@ import { RoleEnum } from './model/role';
 const routes: Routes= [
     {
         path:'home', 
-        component: HomeComponent, 
-        canActivate: [AuthGuard]
+        component: HomeComponent
     },
     {
         path:'movieDetails/:movieId', 
@@ -33,6 +33,11 @@ const routes: Routes= [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: '',   

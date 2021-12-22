@@ -1,10 +1,12 @@
 import { RoleEnum } from './../model/role';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../model/service/authentication.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup } from '@angular/forms';
 import { Component, Inject, Injectable } from '@angular/core';
 import { User } from '../model/user'; 
 import { Role } from '../model/role';
+import { Validators } from '@angular/forms';
+import { Profile } from '../model/profile';
 
 @Component({
   selector: 'navbar-root',
@@ -14,10 +16,44 @@ import { Role } from '../model/role';
 
 export class NavbarComponent {
   user: User;
+  SignUpForm: FormGroup;
+
   constructor(
      private authenticationService: AuthenticationService,
-     private router: Router){ 
+     private router: Router,
+     private fb: FormBuilder
+     ){ 
        this.authenticationService.loggedInUser.subscribe(x=>this.user = x);
+
+       this.SignUpForm=this.fb.group({
+        id : [' '],
+        username: ['',[
+          Validators.required,
+          Validators.maxLength(50)
+        ]],
+        password: ['',[
+          Validators.required,
+          Validators.maxLength(50)
+        ]],
+        profile: this.fb.group({
+          firstName : ['',[
+            Validators.required,
+            Validators.maxLength(50)
+          ]],
+          lastName: ['',[
+            Validators.required,
+            Validators.maxLength(50)
+          ]],
+          email: ['',[
+            Validators.required,
+            Validators.maxLength(50)
+          ]],
+          profilePicture:['',[
+            Validators.required,
+            Validators.maxLength(50)
+          ]]
+        })
+      });
      }
 
   get isAdmin(){
@@ -36,10 +72,10 @@ export class NavbarComponent {
     return false;
   }
 
-  onSignUp(signupForm: NgForm):void{
+  onSignUp():void{
     document.getElementById('sign-up-form').click();
 
-    this.authenticationService.register(signupForm.value).subscribe({
+    this.authenticationService.register(this.SignUpForm.value).subscribe({
       next: (response: User) => {
         console.log(response);
         this.router.navigate(["/home"]);
@@ -49,7 +85,7 @@ export class NavbarComponent {
         console.log('Cannot sign up'+error)
       
     })
-    signupForm.reset();
+    this.SignUpForm.reset();
   }
 
   logout(){

@@ -61,6 +61,9 @@
         <div class="modal-body">
           <form [formGroup]="ActorForm" (ngSubmit)="onAddActor()">
             <div class="form-group">
+              <input type="text" formControlName="id" name="id" hidden="true">
+            </div>
+            <div class="form-group">
               <label for="name">Name</label>
               <input type="text" formControlName="name" name="name" class="form-control" id="name" placeholder="Name" Required>
               <div *ngIf="af['name'].invalid && (af['name'].dirty || af['name'].touched)"
@@ -109,7 +112,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="MovieModalLabel">Add Actor</h5>
+          <h5 class="modal-title" id="MovieModalLabel">Add Movie</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -147,25 +150,6 @@
                     Release Year cannot be above 2022
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                  <label for="rating">Rating</label>
-                  <input type="text" name="rating" formControlName="rating" class="form-control" id="rating" placeholder="Rating" Required>
-                  <div *ngIf="mf['rating'].invalid && (mf['rating'].dirty || mf['rating'].touched)"
-                    class="alert alert-danger">
-                    <div *ngIf="mf['rating'].errors['required']">
-                      This field is required
-                    </div>
-                    <div *ngIf="mf['rating'].errors['pattern']">
-                      Rating should be a decimal between 0 to 10
-                    </div>
-                    <div *ngIf="mf['rating'].errors['min']">
-                      Release Year should be above 0
-                    </div>
-                    <div *ngIf="mf['rating'].errors['max']">
-                      Release Year cannot be above 10
-                    </div>
-                  </div>
               </div>
               <div class="form-group">
                   <label for="director">Director</label>
@@ -241,23 +225,13 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="review">Review</label>
-                <input type="text" name="review" formControlName="review" class="form-control" id="review" placeholder="Review" Required>
-                <div *ngIf="(mf['review'].invalid) && (mf['review'].dirty || mf['review'].touched)"
-                    class="alert alert-danger">
-                  <div *ngIf="mf['review'].errors['required']">
-                    Please enter Review
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
                 <label>Cast</label>
                 <select multiple formControlName="cast" (change)=onChangeActor($event) class="form-control">
-                  <option *ngFor="let actor of listOfActors" [ngValue]="actor">{{actor.name}}</option>
+                  <option *ngFor="let actor of actors" [ngValue]="actor">{{actor.name}}</option>
                 </select>
-                <div *ngIf="(movieCast.invalid) && (movieCast.dirty || movieCast.touched)"
+                <div *ngIf="(mf['cast'].invalid) && (mf['cast'].dirty || mf['cast'].touched)"
                     class="alert alert-danger">
-                  <div *ngIf="movieCast.errors['required'] || movieCast.errors['required']">
+                  <div *ngIf="mf['cast'].errors['required'] || mf['cast'].errors['required']">
                     Please select atleast 1 actor
                   </div>
                 </div>

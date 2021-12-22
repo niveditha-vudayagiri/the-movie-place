@@ -5,8 +5,6 @@ import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../model/service/movie.service';
 import { FormGroup, FormControl, FormBuilder, ValidationErrors, Validators, FormArray } from '@angular/forms';
 import { Movie } from '../model/movie';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-configure',
@@ -18,30 +16,27 @@ export class ConfigureComponent implements OnInit {
   public editable: any[];
   public movies:any[];
   public actors:any[];
+  public platforms: string[]=[];
+  public languages: string[]=[];
 
   public showMovies: boolean;
   public showActors: boolean; 
-  public listOfActors:Actor[]=[];
+  public isAddMovieMode: boolean;
+  public isAddActorMode: boolean;
+
   public selectedCast = new Set<Actor>();
   public selectedGenres : string[]=[];
   public allGenres:any[]=[];
-  public dropdownSettings:IDropdownSettings={};
-  public platforms: string[]=[];
-  public languages:string[]=[];
-  public isAddMovieMode: boolean;
-  public isAddActorMode: boolean;
+
    ActorForm: FormGroup;
    MovieForm: FormGroup;
+
    get af(){
      return this.ActorForm.controls;
    }
 
    get mf(){
      return this.MovieForm.controls;
-   }
-
-   get movieCast(){
-     return this.MovieForm.get('cast');
    }
 
    onChangeActor(e:any){
@@ -154,18 +149,11 @@ export class ConfigureComponent implements OnInit {
                     Validators.min(1800),
                     Validators.max(2022)
                   ]],
-                  rating: ['',[
-                    Validators.required,
-                    Validators.pattern(decimalRegEx),
-                    Validators.min(0.1),
-                    Validators.max(9.9)
-                  ]],
                   director: ['',[
                     Validators.required,
                     Validators.maxLength(30)
                   ]],
                   cast: ['',Validators.required],
-                  review: [''],
                   watchPlatform: ['',Validators.required],
                   description: ['',Validators.required],
                   imageUrl: ['',Validators.required],
@@ -179,7 +167,7 @@ export class ConfigureComponent implements OnInit {
     this.showActors = false;
     this.showMovies = true;
     
-    this.getListOfActors();
+    this.getAllActors();
   }
   
   onClickMovie():void{
@@ -190,6 +178,7 @@ export class ConfigureComponent implements OnInit {
 
   onClickActor():void{
     this.getAllActors();
+    this.editable=this.actors;
     this.showActors = true;
     this.showMovies=false;
   }
@@ -231,7 +220,6 @@ export class ConfigureComponent implements OnInit {
           else
             this.actors.push(actor);
         })
-        this.editable=this.actors;
       },
       error: () => console.error("Can't fetch actors!")
     }
@@ -246,24 +234,21 @@ export class ConfigureComponent implements OnInit {
     })
   }
 
-  getListOfActors():void{
-    this.actorService.getAllActors().subscribe({
-      next: (response: Actor[])=>{
-        this.listOfActors=response;
-      },
-      error: () => console.log("Can't fetch actors!")
-    }
-    )
-  }
-
   public onAddActor():void{
     document.getElementById('add-actor-form').click();
   
     if(this.isAddActorMode){
-    this.actorService.addActor(this.ActorForm.value).subscribe({
+    let actorToAdd:Actor = new Actor();
+    actorToAdd.name=this.ActorForm.controls['name'].value;
+    actorToAdd.age=this.ActorForm.controls['age'].value;
+    actorToAdd.imageUrl=this.ActorForm.controls['imageUrl'].value;
+    actorToAdd.movies=[];
+
+    console.log(actorToAdd);
+    this.actorService.addActor(actorToAdd).subscribe({
      next: (response:Actor)=>{
-        console.log(response);
         this.getAllActors();
+        this.editable=this.actors;
       },
       error:
        ()=> console.log("Error! Cannot add Actor!")
@@ -274,6 +259,7 @@ export class ConfigureComponent implements OnInit {
       (response:Actor)=>{
         console.log(response);
         this.getAllActors();
+        this.editable=this.actors;
       })
   }
     this.ActorForm.reset();
@@ -301,7 +287,18 @@ export class ConfigureComponent implements OnInit {
       genre: this.selectedGenres.toString()
     });
     if(this.isAddMovieMode){
-          this.movieService.addMovie(this.MovieForm.value).subscribe({
+     let movieToAdd:Movie =new Movie();
+      movieToAdd.name=this.MovieForm.controls['name'].value;
+      movieToAdd.releaseYear=this.MovieForm.controls['releaseYear'].value;
+      movieToAdd.cast=this.MovieForm.controls['cast'].value;
+      movieToAdd.description=this.MovieForm.controls['description'].value;
+      movieToAdd.director=this.MovieForm.controls['director'].value;
+      movieToAdd.genre=this.MovieForm.controls['genre'].value;
+      movieToAdd.imageUrl=this.MovieForm.controls['imageUrl'].value;
+      movieToAdd.language=this.MovieForm.controls['language'].value;
+      movieToAdd.watchPlatform=this.MovieForm.controls['watchPlatform'].value;
+
+          this.movieService.addMovie(movieToAdd).subscribe({
           next: (response:Movie)=>{
               this.getAllMovies();
             },
@@ -325,7 +322,9 @@ export class ConfigureComponent implements OnInit {
   public onDeleteActor():void{
   
     this.actorService.deleteActor(this.ActorForm.get('id').value).subscribe(
-      ()=> { this.getAllActors();  })
+      ()=> { this.getAllActors();
+        this.editable=this.actors;
+        })
   }
 
   public onDeleteMovie():void{
@@ -343,16 +342,18 @@ export class ConfigureComponent implements OnInit {
     button.setAttribute('data-toggle','modal');
     if(mode == 'add'){
       if(this.showActors){
+        this.isAddActorMode=true;
         button.setAttribute('data-target','#ActorModal');
       }
       else{
         this.isAddMovieMode=true;
-        this.getListOfActors();
+        this.getAllActors();
         button.setAttribute('data-target','#MovieModal');
       }
     }
     else if(mode == 'edit'){
       if(this.showActors){
+        this.isAddActorMode=false;
         this.ActorForm.patchValue({
           id: obj.id,
           name: obj.name,
@@ -368,10 +369,8 @@ export class ConfigureComponent implements OnInit {
           id : obj.id,
           name : obj.name,
           releaseYear: obj.releaseYear,
-          rating: obj.rating,
           director: obj.director,
           cast: obj.cast,
-          review: obj.review,
           watchPlatform: obj.watchPlatform,
           description: obj.description,
           imageUrl: obj.imageUrl,
@@ -410,10 +409,8 @@ export class ConfigureComponent implements OnInit {
           id : obj.id,
           name : obj.name,
           releaseYear: obj.releaseYear,
-          rating: obj.rating,
           director: obj.director,
           cast: obj.cast,
-          review: obj.cast,
           watchPlatform: obj.watchPlatform,
           description: obj.watchPlatform,
           imageUrl: obj.imageUrl,
@@ -421,7 +418,6 @@ export class ConfigureComponent implements OnInit {
           genre: obj.genre
         });
         button.setAttribute('data-target','#deleteMovieModal');
-        console.log('Del movie');
       }
     }
 

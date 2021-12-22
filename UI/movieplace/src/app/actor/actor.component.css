@@ -96,19 +96,6 @@ body{
     float:left;  
     height: 320px;
   }
-  #Ratings { 
-    position:relative;
-    z-index:10;
-    top:20px;
-    left:10px;   
-  }
-  
-  #Ratings table td{
-    font-size:20px;
-   width:90px;
-    height:25px;
-    color:rgb(200,200,200);
-  }
   
   
   #TitleHL {  
@@ -126,21 +113,7 @@ body{
   .stars {
     float:left;
   }
-  #UserRatingHL {  
-    display:block;
-    position:relative;
-    top:130px;
-    left:60px;
-    float:left;  
-    overflow:hidden;  
-    font-family:Arial;
-    font-size:30px;
-    font-weight:40;
-    padding-right:30px;
-    color:rgb(20,20,20);
-    z-index:10;
-    cursor:pointer;
-  }
+  
   #MovieInfoMain {
     font-family:Arial;
     position:absolute;  

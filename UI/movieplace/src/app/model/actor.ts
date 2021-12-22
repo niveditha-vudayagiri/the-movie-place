@@ -1,6 +1,6 @@
 import { Movie } from "./movie";
 
-export interface Actor{
+export class Actor{
     id: number;
     name: String;
     age: number;

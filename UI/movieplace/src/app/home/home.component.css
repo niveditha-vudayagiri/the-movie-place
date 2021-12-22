@@ -292,9 +292,10 @@ button:focus {
     margin: 5vh auto;
 }
 .movie-card__title {
-  color: #ffffff;
+  color:white;
   margin-bottom: .25em;
   opacity: .75;
+  height: 100px;
 }
 .movie-card__info {
   text-transform: uppercase;
@@ -309,8 +310,11 @@ button:focus {
 .movie-card__desc {
   font-weight: 300;
   opacity: .84;
-  margin-bottom: 2em;
+  color:ivory;
 }
+.movie-card__desc .limit{
+  width: 50px;
+} 
 
 h1, h2, h3 {
   font-family: "Montserrat", helvetica, arial, sans-serif;
