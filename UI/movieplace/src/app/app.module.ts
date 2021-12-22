@@ -19,6 +19,7 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RatingComponent } from './rating/rating.component';
+import { ProfileComponent } from './profile/profile.component';
 @NgModule({
   
   declarations: [
@@ -30,7 +31,8 @@ import { RatingComponent } from './rating/rating.component';
     ConfigureComponent,
     LoginComponent,
     AdminComponent,
-    RatingComponent
+    RatingComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

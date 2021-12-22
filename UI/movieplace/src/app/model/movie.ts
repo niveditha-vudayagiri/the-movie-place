@@ -1,6 +1,6 @@
 import { CastExpr } from '@angular/compiler';
 import { Actor } from './actor';
-export interface Movie{
+export class Movie{
     id : number;
     name : String;
     releaseYear: String;

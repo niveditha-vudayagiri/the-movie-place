@@ -238,10 +238,17 @@ export class ConfigureComponent implements OnInit {
     document.getElementById('add-actor-form').click();
   
     if(this.isAddActorMode){
-    this.actorService.addActor(this.ActorForm.value).subscribe({
+    let actorToAdd:Actor = new Actor();
+    actorToAdd.name=this.ActorForm.controls['name'].value;
+    actorToAdd.age=this.ActorForm.controls['age'].value;
+    actorToAdd.imageUrl=this.ActorForm.controls['imageUrl'].value;
+    actorToAdd.movies=[];
+
+    console.log(actorToAdd);
+    this.actorService.addActor(actorToAdd).subscribe({
      next: (response:Actor)=>{
-        console.log(response);
         this.getAllActors();
+        this.editable=this.actors;
       },
       error:
        ()=> console.log("Error! Cannot add Actor!")
@@ -252,6 +259,7 @@ export class ConfigureComponent implements OnInit {
       (response:Actor)=>{
         console.log(response);
         this.getAllActors();
+        this.editable=this.actors;
       })
   }
     this.ActorForm.reset();
@@ -279,7 +287,18 @@ export class ConfigureComponent implements OnInit {
       genre: this.selectedGenres.toString()
     });
     if(this.isAddMovieMode){
-          this.movieService.addMovie(this.MovieForm.value).subscribe({
+     let movieToAdd:Movie =new Movie();
+      movieToAdd.name=this.MovieForm.controls['name'].value;
+      movieToAdd.releaseYear=this.MovieForm.controls['releaseYear'].value;
+      movieToAdd.cast=this.MovieForm.controls['cast'].value;
+      movieToAdd.description=this.MovieForm.controls['description'].value;
+      movieToAdd.director=this.MovieForm.controls['director'].value;
+      movieToAdd.genre=this.MovieForm.controls['genre'].value;
+      movieToAdd.imageUrl=this.MovieForm.controls['imageUrl'].value;
+      movieToAdd.language=this.MovieForm.controls['language'].value;
+      movieToAdd.watchPlatform=this.MovieForm.controls['watchPlatform'].value;
+
+          this.movieService.addMovie(movieToAdd).subscribe({
           next: (response:Movie)=>{
               this.getAllMovies();
             },
@@ -303,7 +322,9 @@ export class ConfigureComponent implements OnInit {
   public onDeleteActor():void{
   
     this.actorService.deleteActor(this.ActorForm.get('id').value).subscribe(
-      ()=> { this.getAllActors();  })
+      ()=> { this.getAllActors();
+        this.editable=this.actors;
+        })
   }
 
   public onDeleteMovie():void{
@@ -321,6 +342,7 @@ export class ConfigureComponent implements OnInit {
     button.setAttribute('data-toggle','modal');
     if(mode == 'add'){
       if(this.showActors){
+        this.isAddActorMode=true;
         button.setAttribute('data-target','#ActorModal');
       }
       else{
@@ -331,6 +353,7 @@ export class ConfigureComponent implements OnInit {
     }
     else if(mode == 'edit'){
       if(this.showActors){
+        this.isAddActorMode=false;
         this.ActorForm.patchValue({
           id: obj.id,
           name: obj.name,
@@ -395,7 +418,6 @@ export class ConfigureComponent implements OnInit {
           genre: obj.genre
         });
         button.setAttribute('data-target','#deleteMovieModal');
-        console.log('Del movie');
       }
     }
 
