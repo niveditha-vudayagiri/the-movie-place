@@ -21,8 +21,11 @@ Open terminal and navigate to above location and use the command `ng serve`
 Install MySQL and create a new database `MoviePlace`
 
 ## Features
-- Basic role based authentication.
 - Browse movies, actors and more.
+
+<img src="images/Home page.jpeg" width="100%">
+
+- Basic role based authentication.
 - Configuration option available only for Admin.
 
 ## Future Updates
