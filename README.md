@@ -26,7 +26,16 @@ Install MySQL and create a new database `MoviePlace`
 <img src="images/Home page.jpeg" width="100%">
 
 - Basic role based authentication.
+
+<img src="images/Sign Up.jpeg" width="70%">
+
+<img src="images/Login.jpeg" width="70%">
+
 - Configuration option available only for Admin.
+
+<img src="images/Configure_Actor.jpeg" width="70%">
+
+<img src="images/Configure_Movie.jpeg" width="70%">
 
 ## Future Updates
 - User can add reviews for movie.
